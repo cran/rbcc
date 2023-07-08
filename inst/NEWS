@@ -1,0 +1,37 @@
+Version 0.1.0
+
+   o fixed some bugs
+
+   o implements univariate control charts
+
+Version 0.0.6
+
+   o fixed some bugs
+
+Version 0.0.5
+
+   o fixed some bugs
+
+   o summary function is simplified
+
+   o S3 functions (summary, plot) are registered
+
+Version 0.0.4
+
+   o fixed some bugs
+
+   o summary function is specified
+
+   o t2unc sample data is specified
+
+
+Version 0.0.3
+
+   o fixed some bugs
+
+   o plot function is specified
+
+
+Version 0.0.2
+
+   o package release on GitHub.

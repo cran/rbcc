@@ -1,0 +1,18 @@
+bibentry(
+    header       = "To cite 'rbcc' in publications use:",
+    bibtype      = "article",
+    title        = "rbcc: an R package for Risk-based Control Charts",
+    author       = c(
+    person(given="Aamir",family= "Sagir", role = "aut"),
+    person(given=c("Attila","Imre"),family="Katona", role = "aut"),
+    person(given=c("Zsolt","Tibor"),family="Kosztyan",email="kosztyan.zsolt@gtk.uni-pannon.hu", role = c("aut", "cre"))
+    ),
+    journal      = "IEEE Access",
+    year         = 2023,
+    pages        = "Submitted",
+    volume       = "",
+    url          = "https://github.com/kzst/rbcc/",
+    textVersion  =
+    paste("Saghir et. al. (2023).",
+          "rbcc: an R package for Risk-based Control Charts")
+)
