@@ -5,14 +5,14 @@
 #  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
 #              Department of Quantitative Methods                             #
 #              University of Pannonia, Hungary                                #
-#              kzst@gtk.uni-pannon.hu                                         #
+#              kosztyan.zsolt@gtk.uni-pannon.hu                               #
 #                                                                             #
-# Last modified: March 2023                                                   #
+# Last modified: June 2024                                                    #
 #-----------------------------------------------------------------------------#
 
 #' @export
 plot.rbcc <- function(x,...){
-  if ("rbcc" %in% class(x)){
+  if (methods::is(x,"rbcc")){
     if (!requireNamespace("ggplot2", quietly = TRUE)) {
       stop(
         "Package \"ggplot2\" must be installed to use this function.",
@@ -43,7 +43,7 @@ plot.rbcc <- function(x,...){
 }
 #' @export
 plot.rbcusumcc <- function(x,...){
-  if ("rbcusumcc" %in% class(x)){
+  if (methods::is(x,"rbcusumcc")){
     if (!requireNamespace("ggplot2", quietly = TRUE)) {
       stop(
         "Package \"ggplot2\" must be installed to use this function.",
@@ -74,7 +74,7 @@ plot.rbcusumcc <- function(x,...){
 }
 #' @export
 plot.rbmcc <- function(x,...){
-  if ("rbmcc" %in% class(x)){
+  if (methods::is(x,"rbmcc")){
     if (!requireNamespace("ggplot2", quietly = TRUE)) {
       stop(
         "Package \"ggplot2\" must be installed to use this function.",

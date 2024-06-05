@@ -7,7 +7,7 @@
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: March 2022                                                   #
+# Last modified: June 2024                                                   #
 #-----------------------------------------------------------------------------#
 #' @export
 rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9973, K_init=0,LKL=-5,UKL=5)
