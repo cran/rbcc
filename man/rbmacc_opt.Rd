@@ -7,7 +7,7 @@ Optimized Risk-based Moving Average Control Charts
 \description{
 Calculate Optimized Risk-based Univariate MA Control Chart
 }
-\usage{rbmacc_opt(X, UC, C, n, w, K_init=0, LKL=-5, UKL=5)}
+\usage{rbmacc_opt(X, UC, C, n, w, K_init=0, LKL=0, UKL=5)}
 
 \arguments{
   \item{X}{vector of variable (numeric vector). Either can be simulated using data_gen or defined by using available data set.}
@@ -16,8 +16,8 @@ Calculate Optimized Risk-based Univariate MA Control Chart
    \item{n}{the sample size for grouping. For individual obervations use n=1).}
    \item{w}{Moving average spam. The defualt value is 1. }
      \item{K_init}{Set correction component to 0 by default (default value is 0)}
-  \item{LKL}{Lower limit of K parameter (default value is -5)}
-  \item{UKL}{Upper limit of K parameter (default value is -5)}
+  \item{LKL}{Lower limit of K parameter (default value is 0)}
+  \item{UKL}{Upper limit of K parameter (default value is 5)}
 }
 
 \value{
@@ -33,7 +33,9 @@ Calculate Optimized Risk-based Univariate MA Control Chart
 \item{Kopt}{Optimal K paramater of risk-based MA control chart for a given data}
 }
 \references{
-Kosztyán, Z. T., and Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+
+Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
 \author{
 Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
@@ -41,7 +43,7 @@ Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
 e-mail: kzst@gtk.uni-pannon.hu
 }
 
-\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
+\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}},\code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
 
 \examples{
 # Data generation for vector X

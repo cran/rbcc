@@ -7,7 +7,7 @@
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: March 2023                                                   #
+# Last modified: September 2024                                               #
 #-----------------------------------------------------------------------------#
 
 #' @export

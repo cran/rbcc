@@ -8,7 +8,7 @@ Risk-based Exponentially Weighted Moving Average Control Charts
 Calculate Risk-based Exponentially Weighted Moving Average univarate Control Charts
 }
 \usage{
-rbewmacc (X, UC, C, n=1, lambada=0.20, nsigmas=3, K=0)
+rbewmacc (X, UC, C, n=1, lambada=0.20, nsigmas=3, K=3)
 }
 \arguments{
   \item{X}{vector of variable (numeric vector). Either can be simulated using data_gen or defined by using available data set.}
@@ -17,7 +17,7 @@ rbewmacc (X, UC, C, n=1, lambada=0.20, nsigmas=3, K=0)
   \item{n}{the sample size for grouping. For individual obervations use n=1).}
    \item{lambada}{a weight or smoothing constant for EWMA control charts. The value is between (0,1). The defualt value is 0.20. }
   \item{nsigmas}{the charting multiplier(default value is 3)}
-  \item{K}{a correction component(default value is 0).}
+  \item{K}{a correction component(default value is 3).}
 }
 
 \value{
@@ -37,7 +37,9 @@ measurement uncertainity}
 \item{Observed}{Observed values of ewma statistic with measurement errors for a given data}
 }
 \references{
-Kosztyán, Z. T., and Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+
+Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
 \author{
 Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
@@ -47,7 +49,7 @@ e-mail: kzst@gtk.uni-pannon.hu
 
 
 
-\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
+\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
 \examples{
 # Data generation for vector X
 mu_X <- c(0)               # Define data mean.

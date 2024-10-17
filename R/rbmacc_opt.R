@@ -7,11 +7,11 @@
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: March 2023                                                   #
+# Last modified: September 2024                                               #
 #-----------------------------------------------------------------------------#
 
 #' @export
-rbmacc_opt <- function (X, UC, C, n=1, w=2, K_init=0, LKL=-5, UKL=5){
+rbmacc_opt <- function (X, UC, C, n=1, w=2, K_init=0, LKL=0, UKL=5){
   if (!requireNamespace("stats", quietly = TRUE)) {
     stop(
       "Package \"stats\" must be installed to use this function.",
@@ -24,7 +24,7 @@ rbmacc_opt <- function (X, UC, C, n=1, w=2, K_init=0, LKL=-5, UKL=5){
   if(missing(w))
   {w <- 2 }
     if(missing(K_init))
-  {K_init <- c(0,0)}
+  {K_init <- 0}
 
   fcn=function(K_init) rbmacc(X, UC, C, n, w, K_init)[[1]]
   Q= pracma::fminbnd(fcn, LKL, UKL)

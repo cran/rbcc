@@ -8,7 +8,7 @@ Optimized Risk-based CUSUM Control Charts
 Calculate Optimized Risk-based Univariate cumulative sum (CUSUM) Control Chart
 }
 \usage{
-rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=-5, UKL=5)
+rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=0, UKL=6)
 }
 
 \arguments{
@@ -19,8 +19,8 @@ rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=-5, UKL=5)
     \item{T}{ A numeric value specifying the number of standard errors of the summary statistics at which the cumulative sum is out of control (The defualt value is 5).}
   \item{se.shift}{The amount of shift to detect in the process, measured in standard errors of the CUSUM statistics (default value is 1).}
      \item{K_init}{Set correction component to 0 by default (default value is 0)}
-  \item{LKL}{Lower limit of K parameter (default value is -5)}
-  \item{UKL}{Upper limit of K parameter (default value is 5)}
+  \item{LKL}{Lower limit of K parameter (default value is 0)}
+  \item{UKL}{Upper limit of K parameter (default value is 6)}
 }
 \value{
 \item{cost0}{Total cost of a monitoring process}
@@ -46,7 +46,9 @@ with measurement errors}
 \item{Kopt}{Optimal 'K' paramater of a risk-based CUSUM control chart}
 }
 \references{
-Kosztyán, Z. T., and Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+
+Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
 \author{
 Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
@@ -76,17 +78,17 @@ n <- 1 # For individual obervations use n=1
 UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
 
 C <- c(1,1,1,1)                             # Define a vector of decision costs.
-H <- rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=0)  # for subgroups of size 1
+H <- rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=5)  # for subgroups of size 1
 plot(H)                                           # plot RBCC
 
 # optimal risk-based CUSUM control chart
-H_opt <- rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=-5, UKL=5)
+H_opt <- rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=0, UKL=6)
 
 
 # with vector of proportional decision costs
 C <- c(1, 5, 60, 5)        # vector of decision costs
-H <- rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=0)
-H_opt <- rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=-5, UKL=5)
+H <- rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=5)
+H_opt <- rbcusumcc_opt(X, UC, C, n, T=5, se.shift=1, K_init= 0, LKL=0, UKL=6)
 # optimal risk-based CUSUM control chart
 
 summary(H_opt)                # summarize the reults

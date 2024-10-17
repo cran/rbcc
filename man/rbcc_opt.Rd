@@ -9,7 +9,7 @@ Calculate Optimized Risk-based Univariate Control Chart
 }
 \usage{
 rbcc_opt(X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9973,
-K_init=0,LKL=-5,UKL=5)
+K_init=0,LKL=0,UKL=5)
 }
 
 \arguments{
@@ -20,10 +20,10 @@ data_gen or defined by using available data set.}
   \item{C}{vector of decision costs (default value is vector of 1).}
   \item{n}{the sample size for grouping. For individual obervations use n=1).}
    \item{type}{a character string specifying the type of Shewhart control chart. Available types are; "Xbar", "R"and "S".}
-  \item{confidence_level}{the (1-alpha)percent confidence level(default value is 0.99)}
+  \item{confidence_level}{the (1-alpha)percent confidence level(default value is 0.9973)}
   \item{K_init}{a correction component (default value is 0).}
-  \item{LKL}{Lower limit of K parameter (default value is -5)}
-  \item{UKL}{Upper limit of K parameter (default value is -5)}
+  \item{LKL}{Lower limit of K parameter (default value is 0)}
+  \item{UKL}{Upper limit of K parameter (default value is 5)}
 }
 
 \value{
@@ -43,7 +43,9 @@ for a given data}
 \item{par}{Optimal 'K' parameter of risk-based univariate 'type' chart}
 }
 \references{
-Kosztyán, Z. T., and Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+
+Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
 \author{
 Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
@@ -51,7 +53,7 @@ Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
 e-mail: kzst@gtk.uni-pannon.hu
 }
 
-\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
+\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
 
 \examples{
 

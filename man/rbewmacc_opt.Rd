@@ -9,7 +9,7 @@ Calculate Optimized Risk-based Univariate exponentially weighted moving average
 Control Chart
 }
 \usage{
-rbewmacc_opt(X, UC, C, n=1, lambada=0.20, nsigmas=3, K_init= 0, LKL=-5, UKL=5)
+rbewmacc_opt(X, UC, C, n=1, lambada=0.20, nsigmas=3, K_init= 0, LKL=0, UKL=5)
 }
 
 \arguments{
@@ -20,8 +20,8 @@ rbewmacc_opt(X, UC, C, n=1, lambada=0.20, nsigmas=3, K_init= 0, LKL=-5, UKL=5)
    \item{lambada}{a weight or smoothing constant for EWMA control charts. The value is between (0,1). The defualt value is 0.20. }
   \item{nsigmas}{the charting multiplier(default value is 3)}
      \item{K_init}{Set correction component to 0 by default (default value is 0)}
-  \item{LKL}{Lower limit of K parameter (default value is -5)}
-  \item{UKL}{Upper limit of K parameter (default value is -5)}
+  \item{LKL}{Lower limit of K parameter (default value is 0)}
+  \item{UKL}{Upper limit of K parameter (default value is 5)}
 }
 
 \value{
@@ -37,7 +37,9 @@ rbewmacc_opt(X, UC, C, n=1, lambada=0.20, nsigmas=3, K_init= 0, LKL=-5, UKL=5)
 \item{Kopt}{Optimal 'K' paramater of risk-based EWMA control chart for a given data}
 }
 \references{
-Kosztyán, Z. T., and Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+
+Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
 \author{
 Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
@@ -45,7 +47,7 @@ Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
 e-mail: kzst@gtk.uni-pannon.hu
 }
 
-\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
+\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}},\code{\link{rbewmacc}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}, \code{\link{summary.rbcc}}.}
 
 \examples{
 # Data generation for vector X
@@ -69,7 +71,7 @@ UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
 C <- c(1,1,1,1)                           # Define a vector of decision costs.
 H <- rbewmacc(X, UC, C)                   # for subgroups of size 1
 # fit optimal risk-based EWMA control chart
-H_opt <- rbewmacc_opt(X, UC, C, n=1,lambada=0.20,nsigmas=3,K_init= 0,LKL=-5,UKL=5)
+H_opt <- rbewmacc_opt(X, UC, C, n=1,lambada=0.20,nsigmas=3,K_init= 0,LKL=0,UKL=5)
 plot(H_opt)                              # plot RBEWMACC
 
 # with vector of proportional decision costs
@@ -77,7 +79,7 @@ C <- c(1, 5, 60, 5)               # vector of decision costs
 H <- rbewmacc(X, UC, C)           # traditional risk-based EWMA control chat
 
 # fit optimal risk-based EWMA control chart
-H_opt <- rbewmacc_opt(X, UC, C, n=1,lambada=0.20,nsigmas=3,K_init= 0,LKL=-5,UKL=5)
+H_opt <- rbewmacc_opt(X, UC, C, n=1,lambada=0.20,nsigmas=3,K_init= 0,LKL=0,UKL=5)
 plot(H_opt)                           # plot RBEWMACC
 
 

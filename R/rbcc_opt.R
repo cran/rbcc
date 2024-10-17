@@ -1,16 +1,16 @@
 #-----------------------------------------------------------------------------#
 #                                                                             #
-#  RISK-BASED CONTROL CHARTS                                     #
+#                 RISK-BASED CONTROL CHARTS                                   #
 #                                                                             #
 #  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
 #              Department of Quantitative Methods                             #
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: June 2024                                                   #
+# Last modified: September 2024                                               #
 #-----------------------------------------------------------------------------#
 #' @export
-rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9973, K_init=0,LKL=-5,UKL=5)
+rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9973, K_init=0,LKL=0,UKL=5)
   {
 
   if (!requireNamespace("stats", quietly = TRUE)) {
