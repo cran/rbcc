@@ -28,7 +28,8 @@ rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9
   if ("xbar" %in% type)
   {
   fcn=function(K_init) rbcc (X, UC,C, n, type="xbar", confidence_level=0.9973, K_init)[[1]]
-  Q=pracma::fminbnd(fcn, LKL, UKL)
+  Q<-stats::optimize(fcn, c(LKL, UKL))
+  #Q=optimization::optim_nm(fun=fcn, start=LKL)
   Kopt<-Q[[1]]
   H_opt<-rbcc(X, UC, C, n , type="xbar", confidence_level=0.9973, K=Kopt)
   H_opt$par<-Kopt
@@ -36,7 +37,7 @@ rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9
   if ("R" %in% type)
   {
     fcn=function(K_init) rbcc (X, UC,C, n, type="R", confidence_level=0.9973, K_init)[[1]]
-    Q=pracma::fminbnd(fcn, LKL, UKL)
+    Q<-stats::optimize(fcn, c(LKL, UKL))
     Kopt<-Q[[1]]
     H_opt<-rbcc(X, UC, C, n , type="R", confidence_level=0.9973, K=Kopt)
     H_opt$par<-Kopt
@@ -44,7 +45,7 @@ rbcc_opt <- function (X, UC, C, n, type=c("xbar", "R", "S"),confidence_level=0.9
   if ("S" %in% type)
   {
     fcn=function(K_init) rbcc (X, UC,C, n, type="S", confidence_level=0.9973, K_init)[[1]]
-    Q=pracma::fminbnd(fcn, LKL, UKL)
+    Q<-stats::optimize(fcn, c(LKL, UKL))
     Kopt<-Q[[1]]
     H_opt<-rbcc(X, UC, C, n , type="S", confidence_level=0.9973, K=Kopt)
     H_opt$par<-Kopt

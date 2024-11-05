@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------#
 
 #' @export
-rbcusumcc <- function(X, UC, C, n=1,T= 5, se.shift=1,  K=5)
+rbcusumcc <- function(X, UC, C, n=1,T=5, se.shift=1,  K=5)
 {
   if (!requireNamespace("qcc", quietly = TRUE)) {
     stop(
@@ -32,7 +32,7 @@ rbcusumcc <- function(X, UC, C, n=1,T= 5, se.shift=1,  K=5)
   X <- X[1:n_int]
   UC <- UC[1:n_int]
   x <- matrix(X,ncol=n) #  Data with subgroups
-  qx <- qcc::cusum(x, sizes=1, decision.interval =T, se.shift = se.shift, plot = FALSE)
+  qx <- qcc::cusum(x, sizes=n, decision.interval =T, se.shift = se.shift, plot = FALSE)
   cusumx <- qx$statistics        # real values of cusum statistic
   z=(cusumx-qx$center)
   t=(se.shift/2)*qx$std.dev/sqrt(n)
@@ -52,7 +52,7 @@ rbcusumcc <- function(X, UC, C, n=1,T= 5, se.shift=1,  K=5)
   reall <- cusum.neg               # UCL of cusum chart
     Y <- X+UC                      # measurement error data matrix
   y <- matrix(Y,ncol=n)
-  qy <- qcc::cusum(y, sizes=1, decision.interval=T, se.shift = se.shift, plot = FALSE)
+  qy <- qcc::cusum(y, sizes=n, decision.interval=T, se.shift = se.shift, plot = FALSE)
   cusumy <- qy$statistics     #  observed cusum with measurement errors
   z1=(cusumy-qy$center)
   t1=(se.shift/2)*qy$std.dev/sqrt(n)
@@ -68,7 +68,7 @@ rbcusumcc <- function(X, UC, C, n=1,T= 5, se.shift=1,  K=5)
     cusum.neg1[i] <- min(0, cusum.neg1[i-1]+z.f12[i])
   T3 <- - K*qx$std.dev  # set lower control limit based on observed cusum
   T4 <- K*qx$std.dev   # set upper control limit based on observed cusum
-  obsu <-  cusum.pos1             # Increased shift values of cusum statistics
+  obsu <- cusum.pos1             # Increased shift values of cusum statistics
   obsl <- cusum.neg1              # Decreased shift values of cusum statistics
   
   # -----------------calculation of costs and define cases (boolean)-----------

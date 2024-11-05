@@ -11,7 +11,7 @@
 #-----------------------------------------------------------------------------#
 
 #' @export
-rbcusumcc_opt <- function(X, UC, C, n=1, T=5, se.shift=1, K_init= 0, LKL=0, UKL=6){
+rbcusumcc_opt <- function(X, UC, C, n=1, T=5, se.shift=1, K_init=0, LKL=0, UKL=6){
   if (!requireNamespace("stats", quietly = TRUE)) {
     stop(
       "Package \"stats\" must be installed to use this function.",
@@ -26,9 +26,9 @@ rbcusumcc_opt <- function(X, UC, C, n=1, T=5, se.shift=1, K_init= 0, LKL=0, UKL=
   if(missing(se.shift))
   {se.shift <- 1 }
   if(missing(K_init))
-  {K_init <- 0}
+  {K_init <- T}
   fcn=function(K_init)rbcusumcc(X, UC, C, n, T, se.shift, K_init)[[1]]
-  Q=pracma::fminbnd(fcn, LKL, UKL)
+   Q<-stats::optimize(fcn, c(LKL, UKL))
   Kopt<-Q[[1]]
   H_opt<-rbcusumcc(X, UC, C, n, T, se.shift, K=Kopt)
   H_opt$par<-Kopt

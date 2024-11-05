@@ -62,10 +62,10 @@ plot.rbcusumcc <- function(x,...){
     LCLopt=H_opt$LCLy
     UCLopt=H_opt$UCLy
     Groups<-value<-variable<-NULL
-    df <- data.frame(Groups = c(1:length(H_opt$cusumx)), y1= H_opt$cusumx, y2= H_opt$cusumy, y3= LCL, y4= UCL, y5=LCLopt, y6=UCLopt)
+    df <- data.frame(Groups = c(1:length(H_opt$reall)), y1= H_opt$reall, y2= H_opt$realu, y3= H_opt$obsl, y4= H_opt$obsu, y5= LCL, y6= UCL, y7=LCLopt, y8=UCLopt)
     big_data <- reshape2::melt(df, id = "Groups")
     ggplot2::ggplot(big_data, ggplot2::aes(x = Groups,  y = value, color = variable)) +
-      ggplot2::geom_line()+ ggplot2::scale_color_manual(labels = c("real", "observed","LCL","UCL", "LCLopt", "UCLopt"), values=c("black", "green1", "blue","blue", "red","red"))+
+      ggplot2::geom_line()+ ggplot2::scale_color_manual(labels = c("real-", "real+","observed-","observed+","LCL","UCL", "LCLopt", "UCLopt"), values=c("black","black", "green1","green1", "blue","blue", "red","red"))+
       ggplot2::labs (x= "Groups", y= "Group_Statistic")+ ggplot2::theme_bw()+ ggplot2::theme(legend.title = ggplot2::element_blank()) +
       ggplot2::ggtitle("CUSUM Chart for traditional and risk-based Statistics")
   }else{

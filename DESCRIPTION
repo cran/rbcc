@@ -1,7 +1,7 @@
 Package: rbcc
 Type: Package
 Title: Risk-Based Control Charts
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person(given="Aamir",family= "Saghir", role = "aut"),
     person(given=c("Attila","Imre"),family="Katona", role = "aut"),
@@ -21,9 +21,9 @@ Collate: 'data_gen.R' 'plot.rbcc.R' 'rbmcc.R' 'rbmcc_opt.R'
         'summary.rbcc.R'
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2024-10-17 14:44:07 UTC; kzst
+Packaged: 2024-11-05 16:09:19 UTC; kzst
 Author: Aamir Saghir [aut],
   Attila Imre Katona [aut],
   Zsolt Tibor Kosztyan [aut, cre]
 Repository: CRAN
-Date/Publication: 2024-10-17 15:10:02 UTC
+Date/Publication: 2024-11-05 17:10:02 UTC

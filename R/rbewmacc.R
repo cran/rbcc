@@ -33,20 +33,20 @@ rbewmacc <- function(X, UC, C, n=1, lambada=0.20, nsigmas=3, K=3)
   UC <- UC[1:n_int]
   xx <- matrix(X,ncol=n) #  Data with subgroups
   qx <- qcc::ewma(xx,sizes = n,lambda=lambada, nsigmas=nsigmas, plot = FALSE)
-  ewmax <- qx$statistics          # real values of ewma statistic
+  ewmax <- qx$y         # real values of ewma statistic
   LCL=qx$center -nsigmas*(qx$sigma)
   UCL=qx$center +nsigmas*(qx$sigma)
-  T1 <- LCL[length(qx$statistics)]    #qx$limits[length(qx$statistics)]             # LCL of ewma chart
-  T2 <- UCL [length(qx$statistics)]  #qx$limits[length(qx$statistics),2]             # UCL of ewma chart
+  T1 <- LCL    #qx$limits[length(qx$statistics)]             # LCL of ewma chart
+  T2 <- UCL    #qx$limits[length(qx$statistics),2]             # UCL of ewma chart
 
   Y <- X+UC                      # measurement error data matrix
-  y <- matrix(Y,ncol=n)
-  qy <- qcc::ewma(y,sizes = n,lambda=lambada, nsigmas=nsigmas, plot = FALSE)
-  ewmay <- qy$statistics     #  observed ewma with measurement errors
-  ucl <-  qx$center +K*(qx$sigma)
-  lcl <-  qx$center -K*(qx$sigma)
-  T3 <- lcl[length(qx$statistics)]
-  T4 <- ucl[length(qx$statistics)]                 # set upper control limit based on observed ewma
+  yy <- matrix(Y,ncol=n)
+  qy <- qcc::ewma(yy,sizes = n,lambda=lambada, nsigmas=nsigmas, plot = FALSE)
+  ewmay <- qy$y     #  observed ewma with measurement errors
+  ucl <-  qy$center +K*(qy$sigma)
+  lcl <-  qy$center -K*(qy$sigma)
+  T3 <- lcl       
+  T4 <- ucl         # set upper control limit based on observed ewma
   # -----------------calculation of costs and define cases (boolean)-----------
   P1 <- ((T1 < ewmax & ewmax < T2) & (T3< ewmay & ewmay<T4))*1  # correct acceptance
   P2 <- ((T1 < ewmax & ewmax < T2) & (T4< ewmay | ewmay<T3))*1 # type I error
@@ -61,4 +61,7 @@ rbewmacc <- function(X, UC, C, n=1, lambada=0.20, nsigmas=3, K=3)
   class(output) <- "rbcc"
   return(output)
 }
+
+
+
 

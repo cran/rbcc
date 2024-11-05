@@ -30,14 +30,27 @@ rbmacc <- function(X, UC, C, n=1, w=2, K=3)
     x <- matrix(X,ncol=n) #  Data with subgroups
     xrm <- rowMeans(x)
     ma_x <-  pracma::movavg(xrm, w, type="s") # real values of MA statistic
-    T1 <- mean(ma_x)-3*(pracma::std(ma_x)/sqrt(n*w))    # LCL of MA chart
-    T2 <- mean(ma_x)+3*(pracma::std(ma_x)/sqrt(n*w)) # UCL of MA chart
+    T11=numeric(length(x))
+        for (k in 1:(w-1))  T11[k] <- mean(ma_x)-3*(pracma::std(ma_x)/sqrt(n*k))       # LCL of MA chart
+       for (k in w:length(x)) T11[k] <- mean(ma_x)-3*(pracma::std(ma_x)/sqrt(n*w))
+    T22=numeric(length(x))
+        for (k in 1:(w-1))   T22[k] <- mean(ma_x)+3*(pracma::std(ma_x)/sqrt(n*k))       # UCL of MA chart
+        for (k in w:length(x)) T22[k] <- mean(ma_x)+3*(pracma::std(ma_x)/sqrt(n*w))
+    T1=T11
+    T2=T22
     Y <- X+UC                      # measurement error data matrix
     y <- matrix(Y,ncol=n)
     yrm <- rowMeans(y)
     may <- pracma::movavg(yrm, w, type="s")         # Observed values of MA with measurement errors
-    T3 <- mean(ma_x)-K*(pracma::std(ma_x)/sqrt(n*w))  # LCL of MA chart
-    T4 <- mean(ma_x)+K*(pracma::std(ma_x)/sqrt(n*w))  # UCL of MA chart
+    T21=numeric(length(y))
+    for (k in 1:(w-1))  T21[k] <- mean(may)-K*(pracma::std(may)/sqrt(n*k))       # LCL of MA chart
+    for (k in w:length(y)) T21[k] <- mean(may)-K*(pracma::std(may)/sqrt(n*w))
+    T31=numeric(length(y))
+    for (k in 1:(w-1))   T31[k] <- mean(may)+K*(pracma::std(may)/sqrt(n*k))       # UCL of MA chart
+    for (k in w:length(y)) T31[k] <- mean(may)+K*(pracma::std(may)/sqrt(n*w))
+  
+    T3 <- T21  #mean(ma_x)-K*(pracma::std(ma_x)/sqrt(n*w))  # LCL of MA chart
+    T4 <- T31   #mean(ma_x)+K*(pracma::std(ma_x)/sqrt(n*w))  # UCL of MA chart
   # -----------------calculation of costs and define cases (boolean)-----------
  
     P1 <- ((T1 < ma_x & ma_x < T2) & (T3< may & may<T4))*1  # correct acceptance

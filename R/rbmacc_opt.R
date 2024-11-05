@@ -27,7 +27,7 @@ rbmacc_opt <- function (X, UC, C, n=1, w=2, K_init=0, LKL=0, UKL=5){
   {K_init <- 0}
 
   fcn=function(K_init) rbmacc(X, UC, C, n, w, K_init)[[1]]
-  Q= pracma::fminbnd(fcn, LKL, UKL)
+  Q<-stats::optimize(fcn, c(LKL, UKL))
   Kopt<-Q[[1]]
   H_opt<-rbmacc(X, UC, C, n, w, K=Kopt)
   H_opt$par<-Kopt

@@ -29,7 +29,7 @@ summary.rbcc <- function(object, digits =  getOption("digits"), ...) {
     UCLx <- object$UCLx
     LCLy <- object$LCLy
     UCLy <- object$UCLy
-    Kopt <- object$Kopt
+    Kopt <- object$par
 
     cat("\nSummary of the cost structure:\n")
     cat("\nTotal cost: ",cost0)
@@ -38,11 +38,11 @@ summary.rbcc <- function(object, digits =  getOption("digits"), ...) {
     cat("\nc01: ",cost3)
     cat("\nc00: ",cost4)
     cat("\n\nSummary of control limits:\n")
-    cat("\nLCL for traditional Univariate chart: ",LCLx)
-    cat("\nUCL for traditional Univariate chart: ",UCLx)
-    cat("\nLCL for risk-based univariate chart: ",LCLy)
-    cat("\nUCL for risk-nbased univariate chart: ",UCLy)
-    if (!is.null(Kopt)){
+    cat("\nLCL for traditional univariate chart: ",LCLx)
+    cat("\nUCL for traditional univariate chart: ",UCLx)
+    cat("\nLCL for risk-based  univariate chart: ",LCLy)
+    cat("\nUCL for risk-based univariate chart: ",UCLy)
+      if (!is.null(Kopt)){
       cat("\n\nOptimal correction factor",Kopt)
     }
     cat("\n\nSummary of group statistics of real values:\n")
@@ -73,7 +73,7 @@ summary.rbcusumcc <- function(object, digits =  getOption("digits"), ...) {
     UCLx <- object$UCLx
     LCLy <- object$LCLy
     UCLy <- object$UCLy
-    Kopt <- object$Kopt
+    Kopt <- object$par
 
     cat("\nSummary of the cost structure:\n")
     cat("\nTotal cost: ",cost0)
@@ -116,7 +116,7 @@ summary.rbmcc <- function(object, digits =  getOption("digits"), ...) {
     cost4 <- object$cost4 # total cost related to decision 4 (c00)
     UCLT2 <- object$baselimit
     UCLRBT2 <- object$limit
-    Kopt <- object$Kopt
+    Kopt <- object$par
     #chartx <- object$cchartx
     #charty <- object$ccharty
     #class(chartx)<-"mqcc"
