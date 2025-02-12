@@ -1,33 +1,37 @@
 #-----------------------------------------------------------------------------#
 #                                                                             #
-#  RISK-BASED CONTROL CHARTS                                     #
+#               RISK-BASED CONTROL CHARTS                                     #
 #                                                                             #
 #  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
 #              Department of Quantitative Methods                             #
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: March 2023                                                   #
+# Last modified: January 2025                                                 #
 #-----------------------------------------------------------------------------#
 
 #' @export
 rbewmacc <- function(X, UC, C, n=1, lambada=0.20, nsigmas=3, K=3)
 {
-  if (!requireNamespace("qcc", quietly = TRUE)) {
-    stop(
-      "Package \"qcc\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-
+  if (missing(X))
+    stop("data vector/matrix is not specified")
+  if (missing(UC))
+    stop("Meaurement error vector/matrix is not specified")
+  if (missing(C))
+  {stop("Cost vector argument is missing")}
+  if(!(length(C)==4))
+  {stop("Cost should be a vector of length 4!")}
   if(missing(n))
   {n <- 1}
   if(missing(lambada))
-  {confidence_level <- 0.20 }
+  {lambada <- 0.20 }
   if(missing(nsigmas))
   {nsigmas <- 3 }
   if(missing(K))
   {K <- 3}
+ 
+   X <- stats:: na.omit(X)
+  UC<- stats:: na.omit(UC)
   n_int <- n*(floor(length(X)/n))
   X <- X[1:n_int]
   UC <- UC[1:n_int]

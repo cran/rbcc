@@ -1,22 +1,20 @@
-\name{summary.rbcc}
-\alias{summary.rbcc}
+\name{print.rbcucumcc}
+\alias{print.rbcusumcc}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Summary function of Risk-based Univariate Control Charts
+Print function for Risk-based CUSUM Control Charts
 }
 \description{
-Print summary of Risk-based Univariate (shewhart, exponentially weighted
-moving average(EWMA), moving average (MA) control charts
+Print summary of Risk-based Univariate cumulative sum (CUSUM) Charts
 }
 \usage{
-\method{summary}{rbcc}(object, digits = getOption("digits"), ...)
+\method{print}{rbcusumcc}(x, digits = getOption("digits"), ...)
 }
-
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an object of class 'rbcc'.}
+  \item{x}{an object of class 'rbcusumcc'.}
   \item{digits}{the number of significant digits to use when \code{add.stats = TRUE}.}
-  \item{...}{additional arguments affecting the summary produced.}
+  \item{...}{other graphical parameters.}
 }
 \value{No return value, called for side effects}
 \references{
@@ -30,7 +28,8 @@ Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan*
 e-mail: kzst@gtk.uni-pannon.hu
 }
 
-\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}.}
+
+\seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{summary.rbcc}}, \code{\link{print.rbcc}}, \code{\link{plot.rbcc}}.}
 
 \examples{
 # Data Generation and Xbar chart.
@@ -46,18 +45,21 @@ va_UC <- c(1)              # Define standard deviation of measurement errors.
 sk_UC <- c(0)              # Define skewness of measurement errors.
 ku_UC <- c(3)              # Define kurtosis of measurement errors.
 
-X <- data_gen (obs, mu_X, va_X, sk_X, ku_X)    # Simulation of 200 obervations of 1 variable.
+# Simulation of 200 obervations of 1 variable.
+X <- data_gen (obs, mu_X, va_X, sk_X, ku_X)
+
 # Simulation of 200 muasurement erros related to 1 variable.
 UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
-# Construction of risk-based Xbar chart with default vector of decision costs
-C <- c(1,1,1,1)                                 # vector of decision costs
-H <- rbcc(X, UC, C, n=3, type="xbar")           # for subgroups of size 3
-summary(H)                                      # summarize the results
 
- # optimal risk-based xbar control chart
-H_opt <- rbcc_opt(X, UC, C, n=3, type="xbar")
-summary(H_opt)
+# Construction of risk-based cusum chart with default vector of decision costs
+C <- c(1,1,1,1)                                          # vector of decision costs
+H <- rbcusumcc(X, UC, C, n=1,T=5, se.shift=1,K=5)       # for subgroups of size 1
+print(H)                                                
+
+# optimal risk-based cusum control chart
+H_opt <- rbcusumcc_opt (X, UC, C, n=1, T=5, se.shift=1, K_init=0, LKL=0, UKL=6)
+print(H_opt)
 }
 
-\keyword{univariate}
+\keyword{cumulative sum}
 \concept{control charts}

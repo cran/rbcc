@@ -61,10 +61,6 @@ UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
 # Construction of risk-based Xbar chart with default vector of decision costs
 C <- c(1,1,1,1)                             # vector of decision costs
 H <- rbcc(X, UC, C, n=3, type="xbar")       # for subgroups of size 3
-plot(H)                                     # plot RBCC
-
-# optimal risk-based xbar control chart
-H_opt <- rbcc_opt(X, UC, C, n=3, type="xbar")
 
 # Data Generation and multivariate T2 chart.
 
@@ -108,19 +104,6 @@ H_opt <- rbmcc_opt(X, UC, C, 3)  #optimal risk-based multivariate control chart
 # Plot of Hotelling's T2 and optimal risk based multivariate control charts
 
 plot(H_opt)
-
-# Example of considering the real sample
-
-data("t2uc")                # load the dataset
-
-X <- as.matrix(t2uc[,1:2])  # get optical measurements ar "real" values
-UC <- as.matrix(t2uc[,5:6]) # get measurement errors
-C <- c(1,20,160,5) # define cost structure
-
-# Fit optimized RBT2 control chart
-R <- rbmcc_opt(X, UC, C, 1,confidence_level = 0.99)
-summary(R) # summarize the results
-plot(R)    # plot the result
 
 }
 \keyword{univariate}

@@ -39,6 +39,7 @@ C <- c(1,20,160,5) # define cost structure
 R <- rbmcc_opt(X, UC, C, 1,confidence_level = 0.99)
 summary(R) # summarize the results
 plot(R)    # plot the result
+print(R)    # print summary results
 
 }
 \keyword{datasets}

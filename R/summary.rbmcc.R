@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------------------#
 #                                                                             #
-#              RISK-BASED CONTROL CHARTS                                      #
+#               RISK-BASED CONTROL CHARTS                                     #
 #                                                                             #
 #  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
 #              Department of Quantitative Methods                             #
@@ -10,9 +10,9 @@
 # Last modified: January 2025                                                 #
 #-----------------------------------------------------------------------------#
 #' @export
-summary.rbcc <- function(object, digits =  getOption("digits"), ...)
+summary.rbmcc <- function(object, digits =  getOption("digits"), ...)
 {
-  if (methods::is(object,"rbcc")){
+  if (methods::is(object,"rbmcc")){
     real <- object$real
     Observed <- object$Observed
     cost0 <- object$cost0 # calculation of total cost during the process
@@ -20,23 +20,20 @@ summary.rbcc <- function(object, digits =  getOption("digits"), ...)
     cost2 <- object$cost2 # total cost related to decision 2 (c10)
     cost3 <- object$cost3 # total cost related to decision 3 (c01)
     cost4 <- object$cost4 # total cost related to decision 4 (c00)
-    LCLx <- object$LCLx
-    UCLx <- object$UCLx
-    LCLy <- object$LCLy
-    UCLy <- object$UCLy
-    Kopt <- object$par
+    UCLT2 <- object$baselimit
+    UCLRBT2 <- object$limit
+    Kopt <- object$Kopt
     if (!is.null(Kopt)){
-      results<-list(real = real, Observed = Observed, cost0 = cost0,
+    results<-list(real = real, Observed = Observed, cost0 = cost0,
                     cost1 = cost1, cost2 = cost2, cost3 = cost3,
-                    cost4 = cost4, LCLx = LCLx, UCLx = UCLx,  LCLy = LCLy,
-                    UCLy = UCLy, Kopt = Kopt)
+                    cost4 = cost4, UCLT2 = UCLT2, UCLRBT2 = UCLRBT2,
+                  Kopt = Kopt)
     }else{
       results<-list(real = real, Observed = Observed, cost0 = cost0,
                     cost1 = cost1, cost2 = cost2, cost3 = cost3,
-                    cost4 = cost4, LCLx = LCLx, UCLx = UCLx,  LCLy = LCLy,
-                    UCLy = UCLy)
+                    cost4 = cost4, UCLT2 = UCLT2, UCLRBT2 = UCLRBT2)
     }
     return(invisible(results))
-    print.rbcc(object)
+    print.rbmcc(object)
   }
 }

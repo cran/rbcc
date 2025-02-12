@@ -11,13 +11,13 @@ Calculate Risk-based Exponentially Weighted Moving Average univarate Control Cha
 rbewmacc (X, UC, C, n=1, lambada=0.20, nsigmas=3, K=3)
 }
 \arguments{
-  \item{X}{vector of variable (numeric vector). Either can be simulated using data_gen or defined by using available data set.}
-  \item{UC}{vector  of measuerement error (numeric vector).Either can be simulated using data_gen or defined by using available previous information.}
-  \item{C}{vector of decision costs (default value is vector of 1).}
-  \item{n}{the sample size for grouping. For individual obervations use n=1).}
-   \item{lambada}{a weight or smoothing constant for EWMA control charts. The value is between (0,1). The defualt value is 0.20. }
+  \item{X}{vector of variable (numeric vector). Either can be simulated using data_gen or defined by using available data set}
+  \item{UC}{vector  of measuerement error (numeric vector).Either can be simulated using data_gen or defined by using available previous information}
+  \item{C}{vector of decision costs (default value is vector of 1)}
+  \item{n}{the sample size for grouping. For individual obervations use n=1)}
+   \item{lambada}{a weight or smoothing constant for EWMA control charts. The value is between (0,1). The defualt value is 0.20 }
   \item{nsigmas}{the charting multiplier(default value is 3)}
-  \item{K}{a correction component(default value is 3).}
+  \item{K}{a correction component(default value is 3)}
 }
 
 \value{
@@ -37,7 +37,7 @@ measurement uncertainity}
 \item{Observed}{Observed values of ewma statistic with measurement errors for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -69,9 +69,9 @@ ku_UC <- c(3)               # Define kurtosis of measurement errors.
 
 UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
 
-C <- c(1,1,1,1)                           # Define a vector of decision costs.
-H <- rbewmacc(X, UC, C)                   # for subgroups of size 1
-plot(H)                                   # plot RBCC
+C <- c(1,1,1,1)                     # Define a vector of decision costs.
+H <- rbewmacc(X, UC, C)             # for subgroups of size 1
+plot(H)                             # plot RBCC
 
 # with vector of proportional decision costs
 C <- c(1, 5, 60, 5)               # vector of decision costs

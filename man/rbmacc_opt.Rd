@@ -33,7 +33,7 @@ Calculate Optimized Risk-based Univariate MA Control Chart
 \item{Kopt}{Optimal K paramater of risk-based MA control chart for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -79,6 +79,6 @@ H_opt <- rbmacc_opt(X, UC, C, w=2, n=3)
 summary(H_opt)                              # summarize the reults
 plot(H_opt)                                 # plot RBMACC
 }
-\keyword{MA}
+\keyword{Moving average}
 \concept{control chart}
 

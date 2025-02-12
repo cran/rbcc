@@ -35,7 +35,7 @@ rbmcc_opt(X, UC, C, n=1, confidence_level=0.99, K_init=0,LKL=-5,UKL=5)
 \item{Kopt}{Optimal K paramater of risk-based multivariate control chart for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -69,7 +69,7 @@ UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
 # with default vector of decision costs
 C <- c(1,1,1,1)                # vector of decision costs
 H <- rbmcc(X, UC, C)           # for subgroups of size 1
-plot(H)                        # plot RBMCC
+plot(H)                  # plot RBMCC
 
 H_opt <- rbmcc_opt(X, UC, C)   # optimal risk-based multivariate control chart
 
@@ -102,5 +102,5 @@ plot(R)    # plot the result
 
 }
 \keyword{multivariate}
-\concept{control chart}
+\concept{control charts}
 

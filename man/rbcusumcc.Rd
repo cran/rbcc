@@ -8,7 +8,7 @@ Risk-based Cumulative Sum Control Charts
 Calculate Risk-based Cumulative Sum univariate Control Charts
 }
 \usage{
-rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=5)
+rbcusumcc(X, UC, C, n=1, T=5, se.shift=1, K=5)
 }
 \arguments{
   \item{X}{vector of variable (numeric vector). Either can be simulated using data_gen or defined by using available data set.}
@@ -17,7 +17,7 @@ rbcusumcc(X, UC, C, n, T=5, se.shift=1, K=5)
   \item{n}{the sample size for grouping. For individual obervations use n=1).}
    \item{T}{ A numeric value specifying the number of standard errors of the summary statistics at which the cumulative sum is out of control (The defualt value is 5).}
   \item{se.shift}{The amount of shift to detect in the process, measured in standard errors of the CUSUM statistics (default value is 1).}
-  \item{K}{a correction component(default value is 5).}
+  \item{K}{a correction component(default value is 5)}
 }
 
 \value{
@@ -41,7 +41,7 @@ errors for a given data}
 errors for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -94,5 +94,5 @@ plot(H_opt)
 
 
 }
-\keyword{CUSUM}
-\concept{control chart}
+\keyword{Cumulative sum}
+\concept{control charts}

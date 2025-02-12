@@ -1,30 +1,34 @@
 #-----------------------------------------------------------------------------#
 #                                                                             #
-#                     RISK-BASED CONTROL CHARTS                               #
+#               RISK-BASED CONTROL CHARTS                                     #
 #                                                                             #
 #  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
 #              Department of Quantitative Methods                             #
 #              University of Pannonia, Hungary                                #
 #              kzst@gtk.uni-pannon.hu                                         #
 #                                                                             #
-# Last modified: September 2024                                               #
+# Last modified: January 2025                                                 #
 #-----------------------------------------------------------------------------#
 #' @export
 rbmacc <- function(X, UC, C, n=1, w=2, K=3)
-    {
-    if (!requireNamespace("pracma", quietly = TRUE)) {
-      stop(
-        "Package \"pracma\" must be installed to use this function.",
-        call. = FALSE
-      )
-    }
+{
+  if (missing(X))
+    stop("data vector/matrix is not specified")
+  if (missing(UC))
+    stop("Meaurement error vector/matrix is not specified")
+  if (missing(C))
+  {stop("Cost vector argument is missing")}
+  if(!(length(C)==4))
+  {stop("Cost should be a vector of length 4!")}
   if(missing(n))
   {n <- 1}
   if(missing(w))
   {w <- 2}
   if(missing(K))
   {K <- 3}
-  n_int <- n*(floor(length(X)/n))
+    X <- stats:: na.omit(X)
+    UC<- stats:: na.omit(UC)
+    n_int <- n*(floor(length(X)/n))
     X <- X[1:n_int]
     UC <- UC[1:n_int]
     x <- matrix(X,ncol=n) #  Data with subgroups
@@ -51,8 +55,6 @@ rbmacc <- function(X, UC, C, n=1, w=2, K=3)
   
     T3 <- T21  #mean(ma_x)-K*(pracma::std(ma_x)/sqrt(n*w))  # LCL of MA chart
     T4 <- T31   #mean(ma_x)+K*(pracma::std(ma_x)/sqrt(n*w))  # UCL of MA chart
-  # -----------------calculation of costs and define cases (boolean)-----------
- 
     P1 <- ((T1 < ma_x & ma_x < T2) & (T3< may & may<T4))*1  # correct acceptance
     P2 <- ((T1 < ma_x & ma_x < T2) & (T4< may | may<T3))*1 # type I error
     P3 <- ((T2 < ma_x|ma_x < T1) & (T3< may & may<T4))*1 # type II error

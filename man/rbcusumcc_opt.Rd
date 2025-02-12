@@ -46,7 +46,7 @@ with measurement errors}
 \item{Kopt}{Optimal 'K' paramater of a risk-based CUSUM control chart}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -96,7 +96,7 @@ summary(H_opt)                # summarize the reults
 # Plot of traditional and optimal risk based cusum control charts
 plot(H_opt)
 }
-\keyword{CUSUM}
-\concept{control chart}
+\keyword{Cumulative sum}
+\concept{control charts}
 
 

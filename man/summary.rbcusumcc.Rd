@@ -1,20 +1,18 @@
-\name{summary.rbcc}
-\alias{summary.rbcc}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{summary.rbcusumcc}
+\alias{summary.rbcusumcc}
 \title{
-Summary function of Risk-based Univariate Control Charts
+Summary function of Risk-based CUSUM Control Charts
 }
 \description{
-Print summary of Risk-based Univariate (shewhart, exponentially weighted
-moving average(EWMA), moving average (MA) control charts
+Print summary of Risk-based Cumulative sum (CUSUM) control charts
 }
 \usage{
-\method{summary}{rbcc}(object, digits = getOption("digits"), ...)
+\method{summary}{rbcusumcc}(object, digits = getOption("digits"), ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{object}{an object of class 'rbcc'.}
+  \item{object}{an object of class 'rbcusumcc'.}
   \item{digits}{the number of significant digits to use when \code{add.stats = TRUE}.}
   \item{...}{additional arguments affecting the summary produced.}
 }
@@ -33,7 +31,7 @@ e-mail: kzst@gtk.uni-pannon.hu
 \seealso{\code{\link{data_gen}}, \code{\link{rbcc}}, \code{\link{rbcc_opt}}, \code{\link{rbcusumcc}}, \code{\link{rbcusumcc_opt}}, \code{\link{rbewmacc}}, \code{\link{rbewmacc_opt}}, \code{\link{rbmacc}},  \code{\link{rbmacc_opt}}, \code{\link{rbmcc}}, \code{\link{rbmcc_opt}}, \code{\link{plot.rbcc}}.}
 
 \examples{
-# Data Generation and Xbar chart.
+# Data Generation and CUSUM chart.
 
 ## Example for generation of data vector X and measuremenet error vector UC.
 obs <- 200                 # Total number of observations of a process.
@@ -49,15 +47,15 @@ ku_UC <- c(3)              # Define kurtosis of measurement errors.
 X <- data_gen (obs, mu_X, va_X, sk_X, ku_X)    # Simulation of 200 obervations of 1 variable.
 # Simulation of 200 muasurement erros related to 1 variable.
 UC <- data_gen(obs,mu_UC, va_UC, sk_UC, ku_UC)
-# Construction of risk-based Xbar chart with default vector of decision costs
-C <- c(1,1,1,1)                                 # vector of decision costs
-H <- rbcc(X, UC, C, n=3, type="xbar")           # for subgroups of size 3
-summary(H)                                      # summarize the results
-
+# Construction of risk-based CUSUM chart with default vector of decision costs
+C <- c(1,1,1,1)                                              # vector of decision costs
+H <- rbcusumcc(X, UC, C, n=1,T=5, se.shift=1,  K=5)          # for subgroups of size 1
+summary(H)                                        # Summarizing the results 
+ 
  # optimal risk-based xbar control chart
-H_opt <- rbcc_opt(X, UC, C, n=3, type="xbar")
+H_opt <- rbcusumcc_opt(X, UC, C, n=1, T=5, se.shift=1, K_init=0, LKL=0, UKL=6)
 summary(H_opt)
 }
 
-\keyword{univariate}
+\keyword{cumulative sum}
 \concept{control charts}

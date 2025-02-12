@@ -17,7 +17,7 @@ rbmcc(X, UC, C, n=1 , confidence_level=0.99, K=0)
   \item{n}{ The sample size for grouping. For individual obervations use n=1).}
   \item{confidence_level}{The (1-alpha)percent confidence level (default value is 0.99)}
   \item{K}{Set correction component to 0 by default (default value is 0)}
-}
+  }
 
 \value{
 
@@ -32,7 +32,7 @@ rbmcc(X, UC, C, n=1 , confidence_level=0.99, K=0)
 \item{Observed}{Observed T2 with measurement errors for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -94,10 +94,10 @@ C <- c(1,20,160,5) # define cost structure
 
 # Fit optimized RBT2 control chart
 R <- rbmcc_opt(X, UC, C, 1,confidence_level = 0.99)
-summary(R) # summarize the results
-plot(R)    # plot the result
+summary(R)     # summarize the results
+plot(R)        # plot the result
 
 }
 \keyword{multivariate}
-\concept{control chart}
+\concept{control charts}
 

@@ -37,7 +37,7 @@ rbewmacc_opt(X, UC, C, n=1, lambada=0.20, nsigmas=3, K_init= 0, LKL=0, UKL=5)
 \item{Kopt}{Optimal 'K' paramater of risk-based EWMA control chart for a given data}
 }
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }
@@ -84,6 +84,6 @@ plot(H_opt)                           # plot RBEWMACC
 
 
 }
-\keyword{multivariate}
-\concept{control chart}
+\keyword{EWMA}
+\concept{control charts}
 

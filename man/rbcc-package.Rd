@@ -16,7 +16,9 @@ This work has been implemented by the TKP2021-NVA-10 project with the support pr
 e-mail: kzst@gtk.uni-pannon.hu}
 
 \references{
-Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access.
+Katona, A. I., Saghir, A., Hegedűs, C., & Kosztyán, Z. T. (2023). Design of Risk-Based Univariate Control Charts with Measurement Uncertainty. IEEE Access, 11, 97567-97573.
+
+Katona, A. I. (2021). Validation of risk-based quality control techniques: a case study from the automotive industry. Journal of Applied Statistics, 1-20.
 
 Kosztyán, Z. T., & Katona, A. I. (2016). Risk-based multivariate control chart. Expert Systems with Applications, 62, 250-262.
 }

@@ -1,7 +1,7 @@
 Package: rbcc
 Type: Package
 Title: Risk-Based Control Charts
-Version: 0.1.3
+Version: 0.1.4
 Authors@R: c(
     person(given="Aamir",family= "Saghir", role = "aut"),
     person(given=c("Attila","Imre"),family="Katona", role = "aut"),
@@ -14,16 +14,12 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/kzst/rbcc
 Depends: R (>= 4.00)
-Imports: qcc, ggplot2, reshape2, PearsonDS, methods, pracma
-Collate: 'data_gen.R' 'plot.rbcc.R' 'rbmcc.R' 'rbmcc_opt.R'
-        'rbewmacc.R' 'rbewmacc_opt.R' 'rbmacc.R' 'rbmacc_opt.R'
-        'rbcc.R' 'rbcc_opt.R' 'rbcusumcc.R' 'rbcusumcc_opt.R'
-        'summary.rbcc.R'
+Imports: stats,qcc, ggplot2, reshape2, PearsonDS, methods, pracma
 RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2024-11-05 16:09:19 UTC; kzst
+Packaged: 2025-02-12 08:07:16 UTC; kzst
 Author: Aamir Saghir [aut],
   Attila Imre Katona [aut],
   Zsolt Tibor Kosztyan [aut, cre]
 Repository: CRAN
-Date/Publication: 2024-11-05 17:10:02 UTC
+Date/Publication: 2025-02-12 08:20:02 UTC

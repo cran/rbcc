@@ -19,7 +19,7 @@ rbcusumcc <- function(X, UC, C, n=1,T=5, se.shift=1,  K=5)
       call. = FALSE
     )
   }
-  
+
   if(missing(T))
   {T <- 5.0}
   if(missing(K))
@@ -28,11 +28,14 @@ rbcusumcc <- function(X, UC, C, n=1,T=5, se.shift=1,  K=5)
   {se.shift <- 1 }
   if(missing(n))
   {n <- 1 }
+  X <- stats:: na.omit(X)
+  UC<- stats:: na.omit(UC)
   n_int <- n*(floor(length(X)/n))
   X <- X[1:n_int]
   UC <- UC[1:n_int]
   x <- matrix(X,ncol=n) #  Data with subgroups
-  qx <- qcc::cusum(x, sizes=n, decision.interval =T, se.shift = se.shift, plot = FALSE)
+  qx <- qcc::cusum(x, sizes=n, decision.interval =T, se.shift = se.shift,
+                   plot = FALSE)
   cusumx <- qx$statistics        # real values of cusum statistic
   z=(cusumx-qx$center)
   t=(se.shift/2)*qx$std.dev/sqrt(n)
@@ -70,13 +73,12 @@ rbcusumcc <- function(X, UC, C, n=1,T=5, se.shift=1,  K=5)
   T4 <- K*qx$std.dev   # set upper control limit based on observed cusum
   obsu <- cusum.pos1             # Increased shift values of cusum statistics
   obsl <- cusum.neg1              # Decreased shift values of cusum statistics
-  
+
   # -----------------calculation of costs and define cases (boolean)-----------
-  
-  P1 <-  ((T1 < reall & realu < T2) & (T3< obsl & obsu<T4))*1  # correct acceptance 
+  P1 <-  ((T1 < reall & realu < T2) & (T3< obsl & obsu<T4))*1  # correct acceptance
   P2 <-  ((T1 < reall & realu < T2) & ( T4<obsu | obsl<T3))*1 # type I error
-  P3 <-  ((T2 < realu | reall < T1) & ( T3< obsl & obsu<T4))*1  # type II error 
-  P4 <- ((T2 < realu | reall < T1) & (T4< obsu | obsl<T3))*1 
+  P3 <-  ((T2 < realu | reall < T1) & ( T3< obsl & obsu<T4))*1  # type II error
+  P4 <- ((T2 < realu | reall < T1) & (T4< obsu | obsl<T3))*1
   C0 <- sum(P1)*C[1]+sum(P2)*C[2]+sum(P3)*C[3]+sum(P4)*C[4] # calculation of total cost during the process
   C1 <- sum(P1)*C[1]    # total cost related to decision 1 (c11)
   C2 <- sum(P2)*C[2]    # total cost related to decision 2 (c10)
