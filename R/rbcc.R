@@ -148,7 +148,7 @@ rbcc <- function(X, UC, C, n, type= c("xbar", "R", "S"),
     C4 <- sum(P4)*C[4]    # total cost related to decision 4 (c00)
     output <- list(cost0=C0, cost1= C1, cost2= C2, cost3= C3, cost4= C4, LCLx=T1, UCLx=T2, LCLy=T3, UCLy=T4, real=Sx, Observed= Sy)
     class(output)="rbcc"
-    return(output)
+    return(invisible(output))
   }
 }
 
