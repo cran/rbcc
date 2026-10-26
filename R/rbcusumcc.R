@@ -1,90 +1,106 @@
-#-----------------------------------------------------------------------------#
-#                                                                             #
-#                    RISK-BASED CONTROL CHARTS                                #
-#                                                                             #
-#  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
-#              Department of Quantitative Methods                             #
-#              University of Pannonia, Hungary                                #
-#              kzst@gtk.uni-pannon.hu                                         #
-#                                                                             #
-# Last modified: September 2024                                               #
-#-----------------------------------------------------------------------------#
+.rbcc_prepare_cusum <- function(X, UC, C, n, T, se.shift, validate) {
+  costs <- .rbcc_validate_costs(C)
+  .rbcc_assert_scalar(T, "T", lower = 0, lower_inclusive = FALSE)
+  .rbcc_assert_scalar(se.shift, "se.shift", lower = 0,
+                      lower_inclusive = FALSE)
+  prepared <- .rbcc_prepare_univariate(X, UC, n, validate)
+  qcc_type <- if (n == 1L) "xbar.one" else "xbar"
+  qx <- .rbcc_qcc(
+    qcc::qcc(prepared$xmat, type = qcc_type, plot = FALSE),
+    "the process center and variation for the CUSUM chart"
+  )
+  qy <- .rbcc_qcc(
+    qcc::qcc(prepared$ymat, type = qcc_type, plot = FALSE),
+    "the observed center and variation for the CUSUM chart"
+  )
+  statistics_x <- as.numeric(qx$statistics)
+  statistics_y <- as.numeric(qy$statistics)
+  sigma_x <- as.numeric(qx$std.dev)[1L]
+  sigma_y <- as.numeric(qy$std.dev)[1L]
+  real_cusum <- .rbcc_cusum(
+    statistics_x, as.numeric(qx$center)[1L], sigma_x, n, se.shift
+  )
+  observed_cusum <- .rbcc_cusum(
+    statistics_y, as.numeric(qy$center)[1L], sigma_y, n, se.shift
+  )
+  list(
+    costs = costs, statistics_x = statistics_x,
+    statistics_y = statistics_y,
+    real_positive = real_cusum$positive,
+    real_negative = real_cusum$negative,
+    observed_positive = observed_cusum$positive,
+    observed_negative = observed_cusum$negative,
+    sigma = sigma_x, data = prepared, T = T, se.shift = se.shift
+  )
+}
 
-#' @export
-rbcusumcc <- function(X, UC, C, n=1,T=5, se.shift=1,  K=5)
-{
-  if (!requireNamespace("qcc", quietly = TRUE)) {
-    stop(
-      "Package \"qcc\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-
-  if(missing(T))
-  {T <- 5.0}
-  if(missing(K))
-  {K <- 5}
-  if(missing(se.shift))
-  {se.shift <- 1 }
-  if(missing(n))
-  {n <- 1 }
-  X <- stats:: na.omit(X)
-  UC<- stats:: na.omit(UC)
-  n_int <- n*(floor(length(X)/n))
-  X <- X[1:n_int]
-  UC <- UC[1:n_int]
-  x <- matrix(X,ncol=n) #  Data with subgroups
-  qx <- qcc::cusum(x, sizes=n, decision.interval =T, se.shift = se.shift,
-                   plot = FALSE)
-  cusumx <- qx$statistics        # real values of cusum statistic
-  z=(cusumx-qx$center)
-  t=(se.shift/2)*qx$std.dev/sqrt(n)
-  z.f <- z-t
-  cusum.pos <- rep(NA,  n_int)
-  cusum.pos[1] <- max(0,  z.f[1])
-  for (i in 2:n_int)
-    cusum.pos[i] <- max(0, cusum.pos[i-1]+z.f[i])
-  z.f1 <- z+t
-  cusum.neg <- rep(NA,  n_int)
-  cusum.neg[1] <- min(0,  z.f1[1])
-  for (i in 2:n_int)
-    cusum.neg[i] <- min(0, cusum.neg[i-1]+z.f1[i])
-  T1 <- - T*qx$std.dev  # LCL of cusum chart
-  T2 <- T*qx$std.dev  # UCL of cusum chart
-  realu <- cusum.pos                  # LCL of cusum chart
-  reall <- cusum.neg               # UCL of cusum chart
-    Y <- X+UC                      # measurement error data matrix
-  y <- matrix(Y,ncol=n)
-  qy <- qcc::cusum(y, sizes=n, decision.interval=T, se.shift = se.shift, plot = FALSE)
-  cusumy <- qy$statistics     #  observed cusum with measurement errors
-  z1=(cusumy-qy$center)
-  t1=(se.shift/2)*qy$std.dev/sqrt(n)
-  z.f11 <- z1-t1
-  cusum.pos1 <- rep(NA,  n_int)
-  cusum.pos1[1] <- max(0,  z.f11[1])
-  for (i in 2:n_int)
-    cusum.pos1[i] <- max(0, cusum.pos1[i-1]+z.f11[i])
-  z.f12 <- z1+t1
-  cusum.neg1 <- rep(NA,  n_int)
-  cusum.neg1[1] <- min(0,  z.f12[1])
-  for (i in 2:n_int)
-    cusum.neg1[i] <- min(0, cusum.neg1[i-1]+z.f12[i])
-  T3 <- - K*qx$std.dev  # set lower control limit based on observed cusum
-  T4 <- K*qx$std.dev   # set upper control limit based on observed cusum
-  obsu <- cusum.pos1             # Increased shift values of cusum statistics
-  obsl <- cusum.neg1              # Decreased shift values of cusum statistics
-
-  # -----------------calculation of costs and define cases (boolean)-----------
-  P1 <-  ((T1 < reall & realu < T2) & (T3< obsl & obsu<T4))*1  # correct acceptance
-  P2 <-  ((T1 < reall & realu < T2) & ( T4<obsu | obsl<T3))*1 # type I error
-  P3 <-  ((T2 < realu | reall < T1) & ( T3< obsl & obsu<T4))*1  # type II error
-  P4 <- ((T2 < realu | reall < T1) & (T4< obsu | obsl<T3))*1
-  C0 <- sum(P1)*C[1]+sum(P2)*C[2]+sum(P3)*C[3]+sum(P4)*C[4] # calculation of total cost during the process
-  C1 <- sum(P1)*C[1]    # total cost related to decision 1 (c11)
-  C2 <- sum(P2)*C[2]    # total cost related to decision 2 (c10)
-  C3 <- sum(P3)*C[3]    # total cost related to decision 3 (c01)
-  C4 <- sum(P4)*C[4]    # total cost related to decision 4 (c00)
-  output <- list(cost0=C0, cost1= C1, cost2= C2, cost3= C3, cost4= C4, LCLx=T1, UCLx=T2, LCLy=T3, UCLy=T4, cusumx=cusumx, cusumy=cusumy, reall=reall,realu=realu,obsl=obsl,obsu=obsu)
+.rbcc_finish_cusum <- function(prepared, K, call) {
+  .rbcc_assert_scalar(K, "K", lower = 0)
+  base_lower <- -prepared$T * prepared$sigma
+  base_upper <- prepared$T * prepared$sigma
+  risk_lower <- -K * prepared$sigma
+  risk_upper <- K * prepared$sigma
+  real_in <- prepared$real_negative >= base_lower &
+    prepared$real_positive <= base_upper
+  observed_in <- prepared$observed_negative >= risk_lower &
+    prepared$observed_positive <= risk_upper
+  decisions <- .rbcc_decisions(real_in, observed_in, prepared$costs)
+  output <- list(
+    call = call, chart = "cusum", sample_size = prepared$data$n,
+    T = prepared$T, se.shift = prepared$se.shift, K = K,
+    LCLx = base_lower, UCLx = base_upper,
+    LCLy = risk_lower, UCLy = risk_upper,
+    cusumx = prepared$statistics_x, cusumy = prepared$statistics_y,
+    reall = prepared$real_negative, realu = prepared$real_positive,
+    obsl = prepared$observed_negative, obsu = prepared$observed_positive,
+    data_info = .rbcc_data_info(prepared$data)
+  )
+  output <- .rbcc_add_decisions(output, decisions)
   class(output) <- "rbcusumcc"
-  return(output)
+  output
+}
+
+#' Risk-Based CUSUM Control Chart
+#' @inheritParams rbcc
+#' @param T Positive traditional decision-interval coefficient.
+#' @param se.shift Positive standardized reference shift.
+#' @export
+rbcusumcc <- function(X, UC, C, n = 1, T = 5,
+                      se.shift = 1, K = 5, validate = TRUE) {
+  if (missing(X)) .rbcc_abort("`X` is required.")
+  if (missing(UC)) .rbcc_abort("`UC` is required.")
+  if (missing(C)) .rbcc_abort("`C` is required.")
+  prepared <- .rbcc_prepare_cusum(X, UC, C, n, T, se.shift, validate)
+  .rbcc_finish_cusum(prepared, K, match.call())
+}
+
+#' Optimize a Risk-Based CUSUM Control Chart
+#' @inheritParams rbcc_opt
+#' @inheritParams rbcusumcc
+#' @export
+rbcusumcc_opt <- function(X, UC, C, n = 1, T = 5,
+                          se.shift = 1, K_init = 0,
+                          LKL = 0, UKL = 6,
+                          optimizer = c("exact", "optimize", "grid"),
+                          parallel = FALSE, workers = NULL,
+                          control = list(), validate = TRUE) {
+  if (missing(X)) .rbcc_abort("`X` is required.")
+  if (missing(UC)) .rbcc_abort("`UC` is required.")
+  if (missing(C)) .rbcc_abort("`C` is required.")
+  prepared <- .rbcc_prepare_cusum(X, UC, C, n, T, se.shift, validate)
+  distance <- pmax(
+    prepared$observed_positive,
+    -prepared$observed_negative
+  ) / prepared$sigma
+  real_in <- prepared$real_negative >= -T * prepared$sigma &
+    prepared$real_positive <= T * prepared$sigma
+  optimization <- .rbcc_optimize_threshold(
+    real_in, distance, prepared$costs,
+    LKL, UKL, K_init, optimizer, parallel, workers, control
+  )
+  output <- .rbcc_finish_cusum(prepared, optimization$par, match.call())
+  output$par <- optimization$par
+  output$Kopt <- optimization$par
+  output$optimization <- optimization
+  output
 }

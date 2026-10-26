@@ -1,25 +1,41 @@
 Package: rbcc
 Type: Package
 Title: Risk-Based Control Charts
-Version: 0.1.5
+Version: 0.2.0
 Authors@R: c(
-    person(given="Aamir",family= "Saghir", role = "aut"),
-    person(given=c("Attila","Imre"),family="Katona", role = "aut"),
-    person(given=c("Zsolt","Tibor"),family="Kosztyan",email="kosztyan.zsolt@gtk.uni-pannon.hu", role = c("aut", "cre"))
+    person(given = "Aamir", family = "Saghir", role = "aut"),
+    person(given = c("Attila", "Imre"), family = "Katona", role = "aut"),
+    person(given = c("Zsolt", "Tibor"), family = "Kosztyan",
+           email = "kosztyan.zsolt@gtk.uni-pannon.hu",
+           role = c("aut", "cre"))
     )
-Maintainer: Zsolt Tibor Kosztyan <kosztyan.zsolt@gtk.uni-pannon.hu>
-Description: Univariate and multivariate versions of risk-based control charts. Univariate versions of control charts, such as the risk-based version of X-bar, Moving Average (MA), Exponentially Weighted Moving Average Control Charts (EWMA), and Cumulative Sum Control Charts (CUSUM) charts. The risk-based version of the multivariate T2 control chart. Plot and summary functions. Kosztyan et. al. (2016) <doi:10.1016/j.eswa.2016.06.019>.
+Description: Implements univariate and multivariate risk-based control
+    charts for statistical process control in the presence of measurement
+    uncertainty. Available charts include Shewhart X-bar, R, and S charts,
+    moving-average charts, exponentially weighted moving-average charts,
+    cumulative-sum charts, and Hotelling T-squared charts. Chart parameters
+    can be optimized by minimizing the total cost of the four decision
+    outcomes. The methodology is described by Kosztyan and Katona (2016)
+    <doi:10.1016/j.eswa.2016.06.019>, Kosztyan and Katona (2018)
+    <doi:10.1016/j.cie.2018.04.052>, Katona et al. (2023)
+    <doi:10.1109/ACCESS.2023.3312226>, Saghir et al. (2025)
+    <doi:10.1016/j.rineng.2025.107278>, and Saghir et al. (2026)
+    <doi:10.1016/j.rico.2026.100661>.
 License: GPL (>= 2)
 Encoding: UTF-8
+Language: en-US
 LazyData: true
-URL: https://github.com/kzst/rbcc
-Depends: R (>= 4.00)
-Imports: stats,qcc, ggplot2, reshape2, PearsonDS, methods, pracma
-RoxygenNote: 7.3.2
+Depends: R (>= 4.1.0)
+Imports: ggplot2 (>= 3.4.0), parallel, PearsonDS, qcc, stats, utils
+RoxygenNote: 7.3.3
+ByteCompile: true
 NeedsCompilation: no
-Packaged: 2025-06-17 07:26:40 UTC; kzst
+URL: https://github.com/kzst/rbcc
+BugReports: https://github.com/kzst/rbcc/issues
+Packaged: 2026-10-26 08:49:36 UTC; kzst
 Author: Aamir Saghir [aut],
   Attila Imre Katona [aut],
   Zsolt Tibor Kosztyan [aut, cre]
+Maintainer: Zsolt Tibor Kosztyan <kosztyan.zsolt@gtk.uni-pannon.hu>
 Repository: CRAN
-Date/Publication: 2025-06-17 07:40:02 UTC
+Date/Publication: 2026-10-26 13:00:14 UTC

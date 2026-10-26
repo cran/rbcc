@@ -1,18 +1,70 @@
+citHeader("To cite the rbcc package and its methodology, use one or more of the following references:")
+
 bibentry(
-    header       = "To cite 'rbcc' in publications use:",
-    bibtype      = "article",
-    title        = "rbcc: an R package for Risk-based Control Charts",
-    author       = c(
-    person(given="Aamir",family= "Sagir", role = "aut"),
-    person(given=c("Attila","Imre"),family="Katona", role = "aut"),
-    person(given=c("Zsolt","Tibor"),family="Kosztyan",email="kosztyan.zsolt@gtk.uni-pannon.hu", role = c("aut", "cre"))
-    ),
-    journal      = "IEEE Access",
-    year         = 2023,
-    pages        = "Submitted",
-    volume       = "",
-    url          = "https://github.com/kzst/rbcc/",
-    textVersion  =
-    paste("Saghir et. al. (2023).",
-          "rbcc: an R package for Risk-based Control Charts")
+  bibtype = "Manual",
+  title = "rbcc: Risk-Based Control Charts",
+  author = c(
+    person("Aamir", "Saghir"),
+    person("Attila Imre", "Katona"),
+    person("Zsolt Tibor", "Kosztyan")
+  ),
+  year = "2026",
+  note = "R package version 0.2.0",
+  url = "https://github.com/kzst/rbcc"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Risk-Based Multivariate Control Chart",
+  author = c(person("Zsolt Tibor", "Kosztyan"),
+             person("Attila Imre", "Katona")),
+  journal = "Expert Systems with Applications",
+  year = "2016", volume = "62", pages = "250--262",
+  doi = "10.1016/j.eswa.2016.06.019"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Risk-Based X-bar Chart with Variable Sample Size and Sampling Interval",
+  author = c(person("Zsolt Tibor", "Kosztyan"),
+             person("Attila Imre", "Katona")),
+  journal = "Computers & Industrial Engineering",
+  year = "2018", volume = "120", pages = "308--319",
+  doi = "10.1016/j.cie.2018.04.052"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Design of Risk-Based Univariate Control Charts with Measurement Uncertainty",
+  author = c(person("Attila I.", "Katona"),
+             person("Aamir", "Saghir"),
+             person("Csaba", "Hegedus"),
+             person("Zsolt T.", "Kosztyan")),
+  journal = "IEEE Access",
+  year = "2023", volume = "11", pages = "97567--97573",
+  doi = "10.1109/ACCESS.2023.3312226"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Optimal Design of Risk-Based Average Charts for Autocorrelated Measurements",
+  author = c(person("Aamir", "Saghir"),
+             person("Zahid", "Khan"),
+             person("Jean-Claude", "Malela-Majika"),
+             person("Zsolt T.", "Kosztyan")),
+  journal = "Results in Engineering",
+  year = "2025", volume = "28", pages = "107278",
+  doi = "10.1016/j.rineng.2025.107278"
+)
+
+bibentry(
+  bibtype = "Article",
+  title = "Analysis of the Efficacy of the Risk-Based X-bar Control Chart in Statistical Process Control",
+  author = c(person("Aamir", "Saghir"),
+             person("Attila I.", "Katona"),
+             person("Csaba", "Hegedus"),
+             person("Zsolt T.", "Kosztyan")),
+  journal = "Results in Control and Optimization",
+  year = "2026", volume = "22", pages = "100661",
+  doi = "10.1016/j.rico.2026.100661"
 )

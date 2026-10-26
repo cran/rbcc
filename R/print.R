@@ -1,234 +1,83 @@
-#-----------------------------------------------------------------------------#
-#                                                                             #
-#               RISK-BASED CONTROL CHARTS                                     #
-#                                                                             #
-#  Written by: Aamir Saghir, Attila I. Katona, Zsolt T. Kosztyan              #
-#              Department of Quantitative Methods                             #
-#              University of Pannonia, Hungary                                #
-#              kzst@gtk.uni-pannon.hu                                         #
-#                                                                             #
-# Last modified: January 2025                                                 #
-#-----------------------------------------------------------------------------#
+# Print methods --------------------------------------------------------------
 
-#' @export
-print <- function(x, ...) {
-  UseMethod("print", x)
+.rbcc_print_costs <- function(x, digits) {
+  costs <- data.frame(
+    outcome = c("Correct acceptance (c11)", "Type I error (c10)",
+                "Type II error (c01)", "Correct control (c00)"),
+    count = unname(x$decision_counts),
+    aggregate_cost = unname(x$cost_components),
+    check.names = FALSE
+  )
+  print(costs, row.names = FALSE, digits = digits)
+  cat("Total decision cost:", format(x$cost0, digits = digits), "\n")
 }
 
-#' @export
-print.rbcc <- function(x,  digits =  getOption("digits"), ...)
-{
-  real <- x$real
-  Observed <- x$Observed
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  LCLx <- x$LCLx
-  UCLx <- x$UCLx
-  LCLy <- x$LCLy
-  UCLy <- x$UCLy
-  Kopt <- x$par
+.rbcc_print_statistics <- function(real, observed, digits) {
+  statistics <- rbind(
+    true = c(Min. = min(real), Mean = mean(real), Max. = max(real)),
+    observed = c(Min. = min(observed), Mean = mean(observed), Max. = max(observed))
+  )
+  print(statistics, digits = digits)
+}
 
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of control limits:\n")
-  cat("\nLCL for traditional univariate chart: ",LCLx)
-  cat("\nUCL for traditional univariate chart: ",UCLx)
-  cat("\nLCL for risk-based  univariate chart: ",LCLy)
-  cat("\nUCL for risk-based univariate chart: ",UCLy)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
+#' Print Risk-Based Control-Chart Objects
+#' @param x A fitted or summarized chart object.
+#' @param digits Number of significant digits.
+#' @param ... Additional print arguments.
+#' @return The input object, invisibly.
+#' @name print-rbcc
+NULL
+
+#' @rdname print-rbcc
+#' @export
+print.rbcc <- function(x, digits = getOption("digits"), ...) {
+  cat("\nRisk-based", toupper(x$chart), "control chart\n")
+  cat(strrep("-", 42), "\n", sep = "")
+  .rbcc_print_costs(x, digits)
+  cat("\nTraditional limits:", format(range(x$LCLx, x$UCLx), digits = digits), "\n")
+  cat("Risk-based limits:", format(range(x$LCLy, x$UCLy), digits = digits), "\n")
+  if (!is.null(x$par)) cat("Optimal coefficient:", format(x$par, digits = digits), "\n")
+  cat("\nStatistic summary:\n")
+  .rbcc_print_statistics(x$real, x$Observed, digits)
   invisible(x)
 }
 
+#' @rdname print-rbcc
 #' @export
-print.summary.rbcc <- function(x,  digits =  getOption("digits"), ...)
-{
-  real <- x$real
-  Observed <- x$Observed
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  LCLx <- x$LCLx
-  UCLx <- x$UCLx
-  LCLy <- x$LCLy
-  UCLy <- x$UCLy
-  Kopt <- x$par
-
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of control limits:\n")
-  cat("\nLCL for traditional univariate chart: ",LCLx)
-  cat("\nUCL for traditional univariate chart: ",UCLx)
-  cat("\nLCL for risk-based  univariate chart: ",LCLy)
-  cat("\nUCL for risk-based univariate chart: ",UCLy)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
+print.rbcusumcc <- function(x, digits = getOption("digits"), ...) {
+  cat("\nRisk-based CUSUM control chart\n")
+  cat(strrep("-", 42), "\n", sep = "")
+  .rbcc_print_costs(x, digits)
+  cat("\nTraditional decision interval:", format(x$UCLx, digits = digits), "\n")
+  cat("Risk-based decision interval:", format(x$UCLy, digits = digits), "\n")
+  if (!is.null(x$par)) cat("Optimal coefficient:", format(x$par, digits = digits), "\n")
+  cat("\nCUSUM input-statistic summary:\n")
+  .rbcc_print_statistics(x$cusumx, x$cusumy, digits)
   invisible(x)
 }
 
-
+#' @rdname print-rbcc
 #' @export
-print.rbcusumcc <- function(x, digits =  getOption("digits"), ...)
-{
-  real <- x$cusumx
-  Observed <- x$cusumy
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  # LCLx <- x$LCLx
-  UCLx <- x$UCLx
-  #LCLy <- x$LCLy
-  UCLy <- x$UCLy
-  Kopt <- x$par
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of Decision Bound:\n")
-  cat("\nDecision Interval for traditional CUSUM chart: ",UCLx)
-  cat("\nDecision Interval for risk-based CUSUM chart: ",UCLy)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
+print.rbmcc <- function(x, digits = getOption("digits"), ...) {
+  cat("\nRisk-based multivariate T-squared control chart\n")
+  cat(strrep("-", 50), "\n", sep = "")
+  .rbcc_print_costs(x, digits)
+  cat("\nTraditional UCL:", format(x$baselimit, digits = digits), "\n")
+  cat("Risk-based UCL:", format(x$limit, digits = digits), "\n")
+  if (!is.null(x$Kopt)) cat("Optimal correction:", format(x$Kopt, digits = digits), "\n")
+  cat("\nT-squared statistic summary:\n")
+  .rbcc_print_statistics(x$real, x$Observed, digits)
   invisible(x)
 }
 
+#' @rdname print-rbcc
 #' @export
-print.summary.rbcusumcc <- function(x, digits =  getOption("digits"), ...)
-{
-  real <- x$cusumx
-  Observed <- x$cusumy
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  # LCLx <- x$LCLx
-  UCLx <- x$UCLx
-  #LCLy <- x$LCLy
-  UCLy <- x$UCLy
-  Kopt <- x$par
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of Decision Bound:\n")
-  cat("\nDecision Interval for traditional CUSUM chart: ",UCLx)
-  cat("\nDecision Interval for risk-based CUSUM chart: ",UCLy)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
-  invisible(x)
-}
+print.summary.rbcc <- function(x, digits = getOption("digits"), ...) print.rbcc(x, digits = digits, ...)
 
+#' @rdname print-rbcc
 #' @export
-print.rbmcc <- function(x, digits =  getOption("digits"), ...)
-{
-  real <- x$real
-  Observed <- x$Observed
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  UCLT2 <- x$baselimit
-  UCLRBT2 <- x$limit
-  Kopt <- x$Kopt
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of control limits:\n")
-  cat("\nUCL for T2: ",UCLT2)
-  cat("\nUCL for RBT2: ",UCLRBT2)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
-  invisible(x)
-}
+print.summary.rbcusumcc <- function(x, digits = getOption("digits"), ...) print.rbcusumcc(x, digits = digits, ...)
 
+#' @rdname print-rbcc
 #' @export
-print.summary.rbmcc <- function(x, digits =  getOption("digits"), ...)
-{
-  real <- x$real
-  Observed <- x$Observed
-  cost0 <- x$cost0 # calculation of total cost during the process
-  cost1 <- x$cost1 # total cost related to decision 1 (c11)
-  cost2 <- x$cost2 # total cost related to decision 2 (c10)
-  cost3 <- x$cost3 # total cost related to decision 3 (c01)
-  cost4 <- x$cost4 # total cost related to decision 4 (c00)
-  UCLT2 <- x$baselimit
-  UCLRBT2 <- x$limit
-  Kopt <- x$Kopt
-  cat("\nPrint of the cost structure:\n")
-  cat("\nTotal cost: ",cost0)
-  cat("\nc11: ",cost1)
-  cat("\nc10: ",cost2)
-  cat("\nc01: ",cost3)
-  cat("\nc00: ",cost4)
-  cat("\n\nPrint of control limits:\n")
-  cat("\nUCL for T2: ",UCLT2)
-  cat("\nUCL for RBT2: ",UCLRBT2)
-  if (!is.null(Kopt)){
-    cat("\n\nOptimal correction factor",Kopt)
-  }
-  cat("\n\nPrint of group statistics of real values:\n")
-  print(real, digits = digits, ...)
-  cat("\n\nPrint of group statistics of observed values:\n")
-  print(Observed, digits = digits, ...)
-  invisible(x)
-}
-
-
-
-
-
-
-
-
-
-
-
+print.summary.rbmcc <- function(x, digits = getOption("digits"), ...) print.rbmcc(x, digits = digits, ...)
