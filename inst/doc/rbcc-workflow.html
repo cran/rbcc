@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Risk-Based Control Charts: A Complete Workflow</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Risk-Based Control Charts: A Complete
+Workflow</h1>
+
+
+
+<div id="purpose" class="section level2">
+<h2>Purpose</h2>
+<p>A conventional control chart classifies the process from measured
+data. When measurement uncertainty is material, the measured decision
+can disagree with the state indicated by a reference or error-free
+value. <code>rbcc</code> represents the four resulting outcomes
+explicitly:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Reference state</th>
+<th align="left">Measured decision</th>
+<th align="left">Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">In control</td>
+<td align="left">Accept</td>
+<td align="left"><code>c11</code></td>
+</tr>
+<tr class="even">
+<td align="left">In control</td>
+<td align="left">Signal</td>
+<td align="left"><code>c10</code></td>
+</tr>
+<tr class="odd">
+<td align="left">Out of control</td>
+<td align="left">Accept</td>
+<td align="left"><code>c01</code></td>
+</tr>
+<tr class="even">
+<td align="left">Out of control</td>
+<td align="left">Signal</td>
+<td align="left"><code>c00</code></td>
+</tr>
+</tbody>
+</table>
+<p>The package accepts paired reference observations <code>X</code> and
+additive measurement errors <code>UC</code>, forms the observed values
+<code>X + UC</code>, constructs the selected chart for both series, and
+minimizes the total decision cost over a bounded chart coefficient.</p>
+</div>
+<div id="a-paired-measurement-example" class="section level2">
+<h2>A paired-measurement example</h2>
+<p>The example contains stable subgroups followed by a location shift.
+Measurement errors are generated independently and the missed-signal
+cost is larger than the false-signal cost.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20261</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">4</span><span class="dt">L</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>groups <span class="ot">&lt;-</span> <span class="dv">60</span><span class="dt">L</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="dv">40</span><span class="dt">L</span> <span class="sc">*</span> n, <span class="at">mean =</span> <span class="fl">10.0</span>, <span class="at">sd =</span> <span class="fl">0.45</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>  <span class="fu">rnorm</span>(<span class="dv">20</span><span class="dt">L</span> <span class="sc">*</span> n, <span class="at">mean =</span> <span class="fl">10.9</span>, <span class="at">sd =</span> <span class="fl">0.45</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>UC <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(groups <span class="sc">*</span> n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">0.08</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a>C <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">c11 =</span> <span class="dv">1</span>, <span class="at">c10 =</span> <span class="dv">8</span>, <span class="at">c01 =</span> <span class="dv">70</span>, <span class="at">c00 =</span> <span class="dv">4</span>)</span></code></pre></div>
+<p>The default optimizer is the exact empirical threshold search.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>xbar_fit <span class="ot">&lt;-</span> <span class="fu">rbcc_opt</span>(</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>  X, UC, C,</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">n =</span> n,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;xbar&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="at">LKL =</span> <span class="dv">0</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="at">UKL =</span> <span class="dv">5</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&quot;exact&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>xbar_fit<span class="sc">$</span>optimization</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; $par</span></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; [1] 2.847659</span></span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; $value</span></span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; [1] 108</span></span>
+<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a><span class="co">#&gt; $method</span></span>
+<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="co">#&gt; [1] &quot;exact threshold search&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a><span class="co">#&gt; $evaluations</span></span>
+<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a><span class="co">#&gt; [1] 63</span></span>
+<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a><span class="co">#&gt; $convergence</span></span>
+<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span>
+<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a><span class="fu">summary</span>(xbar_fit)</span>
+<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a><span class="co">#&gt; Risk-based XBAR control chart</span></span>
+<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a><span class="co">#&gt; ------------------------------------------</span></span>
+<span id="cb2-28"><a href="#cb2-28" tabindex="-1"></a><span class="co">#&gt;                   outcome count aggregate_cost</span></span>
+<span id="cb2-29"><a href="#cb2-29" tabindex="-1"></a><span class="co">#&gt;  Correct acceptance (c11)    44             44</span></span>
+<span id="cb2-30"><a href="#cb2-30" tabindex="-1"></a><span class="co">#&gt;        Type I error (c10)     0              0</span></span>
+<span id="cb2-31"><a href="#cb2-31" tabindex="-1"></a><span class="co">#&gt;       Type II error (c01)     0              0</span></span>
+<span id="cb2-32"><a href="#cb2-32" tabindex="-1"></a><span class="co">#&gt;     Correct control (c00)    16             64</span></span>
+<span id="cb2-33"><a href="#cb2-33" tabindex="-1"></a><span class="co">#&gt; Total decision cost: 108 </span></span>
+<span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a><span class="co">#&gt; Traditional limits:  9.619397 10.949775 </span></span>
+<span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a><span class="co">#&gt; Risk-based limits:  9.65317 10.91600 </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co">#&gt; Optimal coefficient: 2.847659 </span></span>
+<span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a><span class="co">#&gt; Statistic summary:</span></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co">#&gt;              Min.     Mean     Max.</span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a><span class="co">#&gt; true     9.380060 10.28459 11.33705</span></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a><span class="co">#&gt; observed 9.371395 10.28678 11.35878</span></span></code></pre></div>
+<p>The fitted object retains the four counts and their cost components,
+so the reported objective can be audited directly.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">cbind</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">count =</span> xbar_fit<span class="sc">$</span>decision_counts,</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">unit_cost =</span> C,</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">aggregate_cost =</span> xbar_fit<span class="sc">$</span>cost_components</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;     count unit_cost aggregate_cost</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; q11    44         1             44</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; q10     0         8              0</span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; q01     0        70              0</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; q00    16         4             64</span></span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="fu">sum</span>(xbar_fit<span class="sc">$</span>cost_components)</span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; [1] 108</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">plot</span>(xbar_fit)</span></code></pre></div>
+<div class="float">
+<img role="img" aria-label="Reference and observed X-bar statistics with conventional and optimized risk-based limits." src="data:image/png;base64,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" alt="Reference and observed X-bar statistics with conventional and optimized risk-based limits." />
+<div class="figcaption">Reference and observed X-bar statistics with
+conventional and optimized risk-based limits.</div>
+</div>
+</div>
+<div id="the-chart-family" class="section level2">
+<h2>The chart family</h2>
+<p>All univariate chart constructors use the same paired inputs, cost
+vector, optimization controls, and fitted-object conventions. Their
+monitored feature and memory structure differ.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>fits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">Xbar =</span> xbar_fit,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">R =</span> <span class="fu">rbcc_opt</span>(X, UC, C, <span class="at">n =</span> n, <span class="at">type =</span> <span class="st">&quot;R&quot;</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">S =</span> <span class="fu">rbcc_opt</span>(X, UC, C, <span class="at">n =</span> n, <span class="at">type =</span> <span class="st">&quot;S&quot;</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">MA =</span> <span class="fu">rbmacc_opt</span>(X, UC, C, <span class="at">n =</span> n, <span class="at">w =</span> <span class="dv">3</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="at">EWMA =</span> <span class="fu">rbewmacc_opt</span>(X, UC, C, <span class="at">n =</span> n, <span class="at">lambda =</span> <span class="fl">0.20</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">CUSUM =</span> <span class="fu">rbcusumcc_opt</span>(X, UC, C, <span class="at">n =</span> n, <span class="at">T =</span> <span class="dv">5</span>, <span class="at">se.shift =</span> <span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>)</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>family_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>  <span class="at">chart =</span> <span class="fu">names</span>(fits),</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>  <span class="at">K =</span> <span class="fu">vapply</span>(fits, <span class="cf">function</span>(x) <span class="fu">unname</span>(x<span class="sc">$</span>Kopt), <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>  <span class="at">total_cost =</span> <span class="fu">vapply</span>(fits, <span class="cf">function</span>(x) <span class="fu">unname</span>(x<span class="sc">$</span>cost0), <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>  <span class="at">type_I =</span> <span class="fu">vapply</span>(fits, <span class="cf">function</span>(x) <span class="fu">unname</span>(x<span class="sc">$</span>q10), <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  <span class="at">type_II =</span> <span class="fu">vapply</span>(fits, <span class="cf">function</span>(x) <span class="fu">unname</span>(x<span class="sc">$</span>q01), <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>  <span class="at">evaluations =</span> <span class="fu">vapply</span>(</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>    fits,</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>    <span class="cf">function</span>(x) <span class="fu">as.numeric</span>(x<span class="sc">$</span>optimization<span class="sc">$</span>evaluations),</span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>    <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a>  )</span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>)</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(family_summary, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">chart</th>
+<th align="right">K</th>
+<th align="right">total_cost</th>
+<th align="right">type_I</th>
+<th align="right">type_II</th>
+<th align="right">evaluations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Xbar</td>
+<td align="left">Xbar</td>
+<td align="right">2.848</td>
+<td align="right">108</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">63</td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="left">R</td>
+<td align="right">2.475</td>
+<td align="right">60</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">63</td>
+</tr>
+<tr class="odd">
+<td align="left">S</td>
+<td align="left">S</td>
+<td align="right">1.069</td>
+<td align="right">60</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">63</td>
+</tr>
+<tr class="even">
+<td align="left">MA</td>
+<td align="left">MA</td>
+<td align="right">3.145</td>
+<td align="right">150</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">50</td>
+</tr>
+<tr class="odd">
+<td align="left">EWMA</td>
+<td align="left">EWMA</td>
+<td align="right">2.736</td>
+<td align="right">213</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">36</td>
+</tr>
+<tr class="even">
+<td align="left">CUSUM</td>
+<td align="left">CUSUM</td>
+<td align="right">5.024</td>
+<td align="right">210</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">15</td>
+</tr>
+</tbody>
+</table>
+<p>The table is not a ranking of universally superior charts. X-bar, MA,
+EWMA, and CUSUM emphasize location behavior with different memory; R and
+S monitor within-subgroup dispersion. Chart selection should therefore
+follow the process feature and shift pattern of interest before the
+cost-optimal limit is selected.</p>
+</div>
+<div id="why-exact-optimization-is-the-default" class="section level2">
+<h2>Why exact optimization is the default</h2>
+<p>For a two-sided scalar chart, each observed statistic has a
+standardized distance from its center. Its classification changes only
+when the candidate coefficient crosses that distance. The empirical
+total cost is therefore piecewise constant, and a global minimum over
+the specified interval occurs at a finite set of event thresholds or
+interval endpoints. The exact optimizer sorts those events and updates
+the cost cumulatively.</p>
+<p>Two alternatives are available for comparison or sensitivity
+analysis:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">rbcc_control</span>(<span class="at">grid_size =</span> <span class="dv">201</span><span class="dt">L</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>optimizer_fits <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">exact =</span> <span class="fu">rbcc_opt</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    X, UC, C, <span class="at">n =</span> n, <span class="at">type =</span> <span class="st">&quot;xbar&quot;</span>, <span class="at">optimizer =</span> <span class="st">&quot;exact&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  ),</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">bounded =</span> <span class="fu">rbcc_opt</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>    X, UC, C, <span class="at">n =</span> n, <span class="at">type =</span> <span class="st">&quot;xbar&quot;</span>, <span class="at">optimizer =</span> <span class="st">&quot;optimize&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  ),</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">grid =</span> <span class="fu">rbcc_opt</span>(</span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    X, UC, C, <span class="at">n =</span> n, <span class="at">type =</span> <span class="st">&quot;xbar&quot;</span>, <span class="at">optimizer =</span> <span class="st">&quot;grid&quot;</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>    <span class="at">control =</span> control</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  )</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>)</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>optimizer_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">names</span>(optimizer_fits),</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  <span class="at">K =</span> <span class="fu">vapply</span>(optimizer_fits, <span class="cf">function</span>(x) x<span class="sc">$</span>Kopt, <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>  <span class="at">total_cost =</span> <span class="fu">vapply</span>(optimizer_fits, <span class="cf">function</span>(x) x<span class="sc">$</span>cost0, <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)),</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>  <span class="at">evaluations =</span> <span class="fu">vapply</span>(</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>    optimizer_fits,</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>    <span class="cf">function</span>(x) <span class="fu">as.numeric</span>(x<span class="sc">$</span>optimization<span class="sc">$</span>evaluations),</span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>    <span class="fu">numeric</span>(<span class="dv">1</span><span class="dt">L</span>)</span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>  )</span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>)</span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(optimizer_summary, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">method</th>
+<th align="right">K</th>
+<th align="right">total_cost</th>
+<th align="right">evaluations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">exact</td>
+<td align="left">exact</td>
+<td align="right">2.8477</td>
+<td align="right">108</td>
+<td align="right">63</td>
+</tr>
+<tr class="even">
+<td align="left">bounded</td>
+<td align="left">bounded</td>
+<td align="right">2.8604</td>
+<td align="right">108</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">grid</td>
+<td align="left">grid</td>
+<td align="right">2.8500</td>
+<td align="right">108</td>
+<td align="right">201</td>
+</tr>
+</tbody>
+</table>
+<p>A bounded continuous optimizer is retained for compatibility and
+sensitivity analysis, but the empirical objective is not smooth. A grid
+search is transparent and useful when users deliberately want evaluation
+on a prescribed grid.</p>
+</div>
+<div id="optional-parallel-grid-evaluation" class="section level2">
+<h2>Optional parallel grid evaluation</h2>
+<p>Grid points are independent. <code>parallel = TRUE</code> distributes
+their evaluation by a PSOCK cluster on Windows and by forked workers on
+Unix-like systems. Parallel startup and serialization overhead can
+dominate small examples, so parallelism is opt-in and the exact
+optimizer remains the recommended scalar default.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>parallel_grid_fit <span class="ot">&lt;-</span> <span class="fu">rbcc_opt</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  X, UC, C,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">n =</span> n,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;xbar&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&quot;grid&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">workers =</span> <span class="dv">2</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">control =</span> <span class="fu">rbcc_control</span>(<span class="at">grid_size =</span> <span class="dv">2001</span><span class="dt">L</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>)</span></code></pre></div>
+<p>For reproducibility studies, report the bounds, grid size, worker
+count, operating system, R version, and elapsed time. Compare objective
+values rather than expecting bit-for-bit identical timings across
+machines.</p>
+</div>
+<div id="multivariate-monitoring" class="section level2">
+<h2>Multivariate monitoring</h2>
+<p>The same decision-cost logic applies to the Hotelling T-squared
+chart. The optimized parameter is reported as the correction subtracted
+from the traditional upper control limit.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;t2uc&quot;</span>, <span class="at">package =</span> <span class="st">&quot;rbcc&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>X_multi <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(t2uc[, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>UC_multi <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(t2uc[, <span class="dv">5</span><span class="sc">:</span><span class="dv">6</span>])</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>C_multi <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">c11 =</span> <span class="dv">1</span>, <span class="at">c10 =</span> <span class="dv">20</span>, <span class="at">c01 =</span> <span class="dv">160</span>, <span class="at">c00 =</span> <span class="dv">5</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>multi_fit <span class="ot">&lt;-</span> <span class="fu">rbmcc_opt</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  X_multi, UC_multi, C_multi,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="at">n =</span> <span class="dv">1</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="at">confidence_level =</span> <span class="fl">0.99</span>,</span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="at">LKL =</span> <span class="sc">-</span><span class="dv">5</span>,</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="at">UKL =</span> <span class="dv">5</span>,</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="at">optimizer =</span> <span class="st">&quot;exact&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>)</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="fu">summary</span>(multi_fit)</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a><span class="co">#&gt; Risk-based multivariate T-squared control chart</span></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a><span class="co">#&gt; --------------------------------------------------</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a><span class="co">#&gt;                   outcome count aggregate_cost</span></span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a><span class="co">#&gt;  Correct acceptance (c11)    49             49</span></span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a><span class="co">#&gt;        Type I error (c10)     0              0</span></span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a><span class="co">#&gt;       Type II error (c01)     0              0</span></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#&gt;     Correct control (c00)     1              5</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a><span class="co">#&gt; Total decision cost: 54 </span></span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a><span class="co">#&gt; Traditional UCL: 8.545579 </span></span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a><span class="co">#&gt; Risk-based UCL: 9.551365 </span></span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a><span class="co">#&gt; Optimal correction: -1.005787 </span></span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; T-squared statistic summary:</span></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt;                Min. Mean      Max.</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; true     0.10886812 1.96 10.862370</span></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; observed 0.02867713 1.96  9.779256</span></span></code></pre></div>
+</div>
+<div id="programmatic-use" class="section level2">
+<h2>Programmatic use</h2>
+<p>Assignments to <code>summary()</code> and <code>plot()</code> are
+intentionally silent. The returned objects can be inspected, stored,
+combined, or printed later.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">summary</span>(xbar_fit)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot</span>(xbar_fit)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="fu">names</span>(s)</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;  [1] &quot;call&quot;               &quot;chart&quot;              &quot;sample_size&quot;       </span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt;  [4] &quot;confidence_level&quot;   &quot;K&quot;                  &quot;LCLx&quot;              </span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt;  [7] &quot;UCLx&quot;               &quot;LCLy&quot;               &quot;UCLy&quot;              </span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; [10] &quot;real&quot;               &quot;Observed&quot;           &quot;data_info&quot;         </span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; [13] &quot;cost0&quot;              &quot;cost1&quot;              &quot;cost2&quot;             </span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; [16] &quot;cost3&quot;              &quot;cost4&quot;              &quot;q11&quot;               </span></span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; [19] &quot;q10&quot;                &quot;q01&quot;                &quot;q00&quot;               </span></span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; [22] &quot;decision_counts&quot;    &quot;cost_components&quot;    &quot;decision&quot;          </span></span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; [25] &quot;par&quot;                &quot;Kopt&quot;               &quot;optimization&quot;      </span></span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; [28] &quot;statistics_summary&quot;</span></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="fu">class</span>(p)</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a><span class="co">#&gt; [1] &quot;ggplot2::ggplot&quot; &quot;ggplot&quot;          &quot;ggplot2::gg&quot;     &quot;S7_object&quot;      </span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a><span class="co">#&gt; [5] &quot;gg&quot;</span></span></code></pre></div>
+<p>A robust applied analysis should retain the fitted object, report the
+complete cost vector and decision counts, examine plausible alternative
+costs, and validate prospective statistical performance separately from
+the empirical calibration cost.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

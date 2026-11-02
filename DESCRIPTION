@@ -1,7 +1,7 @@
 Package: rbcc
 Type: Package
 Title: Risk-Based Control Charts
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person(given = "Aamir", family = "Saghir", role = "aut"),
     person(given = c("Attila", "Imre"), family = "Katona", role = "aut"),
@@ -13,9 +13,11 @@ Description: Implements univariate and multivariate risk-based control
     charts for statistical process control in the presence of measurement
     uncertainty. Available charts include Shewhart X-bar, R, and S charts,
     moving-average charts, exponentially weighted moving-average charts,
-    cumulative-sum charts, and Hotelling T-squared charts. Chart parameters
-    can be optimized by minimizing the total cost of the four decision
-    outcomes. The methodology is described by Kosztyan and Katona (2016)
+    cumulative-sum charts, and Hotelling T-squared charts. Chart limits can be
+    selected by exact empirical threshold optimization, bounded numerical
+    optimization, or sequential and optional parallel grid search while
+    minimizing the total cost of four decision outcomes. The methodology is
+    described by Kosztyan and Katona (2016)
     <doi:10.1016/j.eswa.2016.06.019>, Kosztyan and Katona (2018)
     <doi:10.1016/j.cie.2018.04.052>, Katona et al. (2023)
     <doi:10.1109/ACCESS.2023.3312226>, Saghir et al. (2025)
@@ -27,15 +29,17 @@ Language: en-US
 LazyData: true
 Depends: R (>= 4.1.0)
 Imports: ggplot2 (>= 3.4.0), parallel, PearsonDS, qcc, stats, utils
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
 RoxygenNote: 7.3.3
 ByteCompile: true
 NeedsCompilation: no
 URL: https://github.com/kzst/rbcc
 BugReports: https://github.com/kzst/rbcc/issues
-Packaged: 2026-10-26 08:49:36 UTC; kzst
+Packaged: 2026-10-31 12:53:12 UTC; Felhasznalo
 Author: Aamir Saghir [aut],
   Attila Imre Katona [aut],
   Zsolt Tibor Kosztyan [aut, cre]
 Maintainer: Zsolt Tibor Kosztyan <kosztyan.zsolt@gtk.uni-pannon.hu>
 Repository: CRAN
-Date/Publication: 2026-10-26 13:00:14 UTC
+Date/Publication: 2026-11-02 14:00:02 UTC

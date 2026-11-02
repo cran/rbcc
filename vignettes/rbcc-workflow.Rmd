@@ -1,0 +1,229 @@
+---
+title: "Risk-Based Control Charts: A Complete Workflow"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Risk-Based Control Charts: A Complete Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.2,
+  dpi = 96
+)
+library(rbcc)
+```
+
+## Purpose
+
+A conventional control chart classifies the process from measured data. When
+measurement uncertainty is material, the measured decision can disagree with
+the state indicated by a reference or error-free value. `rbcc` represents the
+four resulting outcomes explicitly:
+
+| Reference state | Measured decision | Cost |
+|:--|:--|:--|
+| In control | Accept | `c11` |
+| In control | Signal | `c10` |
+| Out of control | Accept | `c01` |
+| Out of control | Signal | `c00` |
+
+The package accepts paired reference observations `X` and additive measurement
+errors `UC`, forms the observed values `X + UC`, constructs the selected chart
+for both series, and minimizes the total decision cost over a bounded chart
+coefficient.
+
+## A paired-measurement example
+
+The example contains stable subgroups followed by a location shift. Measurement
+errors are generated independently and the missed-signal cost is larger than
+the false-signal cost.
+
+```{r data}
+set.seed(20261)
+n <- 4L
+groups <- 60L
+X <- c(
+  rnorm(40L * n, mean = 10.0, sd = 0.45),
+  rnorm(20L * n, mean = 10.9, sd = 0.45)
+)
+UC <- rnorm(groups * n, mean = 0, sd = 0.08)
+C <- c(c11 = 1, c10 = 8, c01 = 70, c00 = 4)
+```
+
+The default optimizer is the exact empirical threshold search.
+
+```{r xbar-fit}
+xbar_fit <- rbcc_opt(
+  X, UC, C,
+  n = n,
+  type = "xbar",
+  LKL = 0,
+  UKL = 5,
+  optimizer = "exact"
+)
+xbar_fit$optimization
+summary(xbar_fit)
+```
+
+The fitted object retains the four counts and their cost components, so the
+reported objective can be audited directly.
+
+```{r audit}
+cbind(
+  count = xbar_fit$decision_counts,
+  unit_cost = C,
+  aggregate_cost = xbar_fit$cost_components
+)
+sum(xbar_fit$cost_components)
+```
+
+```{r xbar-plot, fig.cap="Reference and observed X-bar statistics with conventional and optimized risk-based limits."}
+plot(xbar_fit)
+```
+
+## The chart family
+
+All univariate chart constructors use the same paired inputs, cost vector,
+optimization controls, and fitted-object conventions. Their monitored feature
+and memory structure differ.
+
+```{r family-fits}
+fits <- list(
+  Xbar = xbar_fit,
+  R = rbcc_opt(X, UC, C, n = n, type = "R"),
+  S = rbcc_opt(X, UC, C, n = n, type = "S"),
+  MA = rbmacc_opt(X, UC, C, n = n, w = 3),
+  EWMA = rbewmacc_opt(X, UC, C, n = n, lambda = 0.20),
+  CUSUM = rbcusumcc_opt(X, UC, C, n = n, T = 5, se.shift = 1)
+)
+
+family_summary <- data.frame(
+  chart = names(fits),
+  K = vapply(fits, function(x) unname(x$Kopt), numeric(1L)),
+  total_cost = vapply(fits, function(x) unname(x$cost0), numeric(1L)),
+  type_I = vapply(fits, function(x) unname(x$q10), numeric(1L)),
+  type_II = vapply(fits, function(x) unname(x$q01), numeric(1L)),
+  evaluations = vapply(
+    fits,
+    function(x) as.numeric(x$optimization$evaluations),
+    numeric(1L)
+  )
+)
+knitr::kable(family_summary, digits = 3)
+```
+
+The table is not a ranking of universally superior charts. X-bar, MA, EWMA, and
+CUSUM emphasize location behavior with different memory; R and S monitor
+within-subgroup dispersion. Chart selection should therefore follow the process
+feature and shift pattern of interest before the cost-optimal limit is selected.
+
+## Why exact optimization is the default
+
+For a two-sided scalar chart, each observed statistic has a standardized
+distance from its center. Its classification changes only when the candidate
+coefficient crosses that distance. The empirical total cost is therefore
+piecewise constant, and a global minimum over the specified interval occurs at
+a finite set of event thresholds or interval endpoints. The exact optimizer
+sorts those events and updates the cost cumulatively.
+
+Two alternatives are available for comparison or sensitivity analysis:
+
+```{r optimizer-comparison}
+control <- rbcc_control(grid_size = 201L)
+optimizer_fits <- list(
+  exact = rbcc_opt(
+    X, UC, C, n = n, type = "xbar", optimizer = "exact"
+  ),
+  bounded = rbcc_opt(
+    X, UC, C, n = n, type = "xbar", optimizer = "optimize"
+  ),
+  grid = rbcc_opt(
+    X, UC, C, n = n, type = "xbar", optimizer = "grid",
+    control = control
+  )
+)
+optimizer_summary <- data.frame(
+  method = names(optimizer_fits),
+  K = vapply(optimizer_fits, function(x) x$Kopt, numeric(1L)),
+  total_cost = vapply(optimizer_fits, function(x) x$cost0, numeric(1L)),
+  evaluations = vapply(
+    optimizer_fits,
+    function(x) as.numeric(x$optimization$evaluations),
+    numeric(1L)
+  )
+)
+knitr::kable(optimizer_summary, digits = 4)
+```
+
+A bounded continuous optimizer is retained for compatibility and sensitivity
+analysis, but the empirical objective is not smooth. A grid search is transparent
+and useful when users deliberately want evaluation on a prescribed grid.
+
+## Optional parallel grid evaluation
+
+Grid points are independent. `parallel = TRUE` distributes their evaluation by
+a PSOCK cluster on Windows and by forked workers on Unix-like systems. Parallel
+startup and serialization overhead can dominate small examples, so parallelism
+is opt-in and the exact optimizer remains the recommended scalar default.
+
+```{r parallel-grid, eval=FALSE}
+parallel_grid_fit <- rbcc_opt(
+  X, UC, C,
+  n = n,
+  type = "xbar",
+  optimizer = "grid",
+  parallel = TRUE,
+  workers = 2,
+  control = rbcc_control(grid_size = 2001L)
+)
+```
+
+For reproducibility studies, report the bounds, grid size, worker count,
+operating system, R version, and elapsed time. Compare objective values rather
+than expecting bit-for-bit identical timings across machines.
+
+## Multivariate monitoring
+
+The same decision-cost logic applies to the Hotelling T-squared chart. The
+optimized parameter is reported as the correction subtracted from the
+traditional upper control limit.
+
+```{r multivariate}
+data("t2uc", package = "rbcc")
+X_multi <- as.matrix(t2uc[, 1:2])
+UC_multi <- as.matrix(t2uc[, 5:6])
+C_multi <- c(c11 = 1, c10 = 20, c01 = 160, c00 = 5)
+
+multi_fit <- rbmcc_opt(
+  X_multi, UC_multi, C_multi,
+  n = 1,
+  confidence_level = 0.99,
+  LKL = -5,
+  UKL = 5,
+  optimizer = "exact"
+)
+summary(multi_fit)
+```
+
+## Programmatic use
+
+Assignments to `summary()` and `plot()` are intentionally silent. The returned
+objects can be inspected, stored, combined, or printed later.
+
+```{r s3-interface}
+s <- summary(xbar_fit)
+p <- plot(xbar_fit)
+
+names(s)
+class(p)
+```
+
+A robust applied analysis should retain the fitted object, report the complete
+cost vector and decision counts, examine plausible alternative costs, and
+validate prospective statistical performance separately from the empirical
+calibration cost.

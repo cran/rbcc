@@ -9,7 +9,7 @@ bibentry(
     person("Zsolt Tibor", "Kosztyan")
   ),
   year = "2026",
-  note = "R package version 0.2.0",
+  note = paste("R package version", meta$Version),
   url = "https://github.com/kzst/rbcc"
 )
 

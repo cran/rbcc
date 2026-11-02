@@ -1,5 +1,6 @@
-6ae26a639fe7228a6eebd43551edd0f8 *DESCRIPTION
+c59cb8216546798731eb555c7326eed5 *DESCRIPTION
 f621f31cc6e944494de7c477fc332397 *NAMESPACE
+5b0fbfba9fe602423f38f49aef5a008b *NEWS.md
 028a955073dd208b8beee0e126f9a426 *R/plot.R
 3657581cc72dcfbcf3538f04804266f1 *R/print.R
 f8d1e5747fb1a6a1c2bb3e8960ac139e *R/rbcc.R
@@ -11,10 +12,14 @@ f8d1e5747fb1a6a1c2bb3e8960ac139e *R/rbcc.R
 ca601dce413a43badbbcd6d89f70c0c9 *R/utilities.R
 69eba6218f5516c6e35684e96bc34ee0 *R/utils.R
 e17f5f3121b21c550c7a592202dbd0a8 *R/zzz.R
-4c0479efae9fb67119f8c986a0dc3210 *README.md
-8f8e4f751835d75b5966c66f5e66ca9c *build/partial.rdb
+d1894295a08e15b3d3701f1ac5be240e *README.md
+6af8e7644a2c366a25339b1923c9a048 *build/partial.rdb
+879b9abc24eedd73b56ebadf43048c4c *build/vignette.rds
 43e6b63624fcde9a1813c4d53469581a *data/t2uc.rda
-6c8dfb1a243a1a3dfc8dad38917ad74c *inst/CITATION
+85490cdb5b27820245cb94c19e4862a1 *inst/CITATION
+9395f7a4fcdc56c1766d18e5dc2b1a1e *inst/doc/rbcc-workflow.R
+6bf5ed4ff9b5bdc60c73406b95532006 *inst/doc/rbcc-workflow.Rmd
+102d799271e3129b42053b30929c8148 *inst/doc/rbcc-workflow.html
 994dfa591e3f2fb00608dd0407c161c9 *man/data_gen.Rd
 2bcbb7ce88ed664c875903ee0827c48a *man/plot-rbcc.Rd
 8530bb94850701166c91d5c189154847 *man/print-rbcc.Rd
@@ -33,3 +38,5 @@ e69b0eca5ee0871e8130e488626684bb *man/rbmacc_opt.Rd
 e4f293a2147e28dc8331ecd4f6107bba *man/summary-rbcc.Rd
 ff59d6dca947f8f454d3ea0c738c9a9b *man/t2uc.Rd
 8825a6b4d0667d03c75d0e1a1af61218 *tests/rbcc.R
+4feea30d34b20c5e5b6622f98ad113ba *tests/regression.R
+6bf5ed4ff9b5bdc60c73406b95532006 *vignettes/rbcc-workflow.Rmd
